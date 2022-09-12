@@ -20,6 +20,16 @@ namespace CentroLink_Automation
         }
 
 
+        [TearDown]
+        public override async Task EndTest()
+        {
+            base.EndTest();
+
+            await LotteryRetailDatabase.ResetTestMachine();
+            await LotteryRetailDatabase.DeleteMachine(TestData.TestMachineNumber);
+        }
+
+
         [Test]
         public async Task Show_Hidden_Machines()
         {
@@ -27,16 +37,16 @@ namespace CentroLink_Automation
             loginPage.Login("user1", "Diamond1#");
             navMenu.ClickMachineSetupTab();
             
-            Assert.True(machineSetup.MachineFoundInList(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineFoundInList(TestData.DefaultMachineNumber));
 
-            await LotteryRetailDatabase.UpdateMachineRemovedFlag(TestData.MachineNumber, true);
+            await LotteryRetailDatabase.UpdateMachineRemovedFlag(TestData.DefaultMachineNumber, true);
 
             machineSetup.ClickRefreshButton();
 
-            Assert.False(machineSetup.MachineFoundInList(TestData.MachineNumber));
+            Assert.False(machineSetup.MachineFoundInList(TestData.DefaultMachineNumber));
 
             machineSetup.ShowRemovedMachines();
-            Assert.True(machineSetup.MachineFoundInList(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineFoundInList(TestData.DefaultMachineNumber));
         }
 
 
@@ -44,12 +54,12 @@ namespace CentroLink_Automation
         public async Task Machine_Status_Active()
         {
             //set machine to Active in database
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, true);
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, true);
 
             loginPage.Login("user1", "Diamond1#");
             navMenu.ClickMachineSetupTab();
 
-            Assert.True(machineSetup.MachineIsActive(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineIsActive(TestData.DefaultMachineNumber));
         }
 
 
@@ -57,18 +67,18 @@ namespace CentroLink_Automation
         public async Task Machine_Status_Offline()
         {
             //set machine to Offline in database
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, false);
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, false);
 
             loginPage.Login("user1", "Diamond1#");
             navMenu.ClickMachineSetupTab();
 
-            Assert.False(machineSetup.MachineIsActive(TestData.MachineNumber));
+            Assert.False(machineSetup.MachineIsActive(TestData.DefaultMachineNumber));
 
             //set machine to Online in database
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, true);
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, true);
             machineSetup.ClickRefreshButton();
 
-            Assert.True(machineSetup.MachineIsActive(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineIsActive(TestData.DefaultMachineNumber));
         }
 
 
@@ -79,14 +89,14 @@ namespace CentroLink_Automation
             loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
             navMenu.ClickMachineSetupTab();
 
-            Assert.False(machineSetup.MachineIsRemoved(TestData.MachineNumber));
+            Assert.False(machineSetup.MachineIsRemoved(TestData.DefaultMachineNumber));
 
             //set machine to removed in the database
-            await LotteryRetailDatabase.UpdateMachineRemovedFlag(TestData.MachineNumber, true);
+            await LotteryRetailDatabase.UpdateMachineRemovedFlag(TestData.DefaultMachineNumber, true);
             machineSetup.ClickRefreshButton();
             machineSetup.ShowRemovedMachines();
 
-            Assert.True(machineSetup.MachineIsRemoved(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineIsRemoved(TestData.DefaultMachineNumber));
         }
 
 
@@ -124,31 +134,33 @@ namespace CentroLink_Automation
         public async Task MachineSetup_Refresh()
         {
             //set machine to Active in database
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, true);
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, true);
 
             loginPage.Login("user1", "Diamond1#");
             navMenu.ClickMachineSetupTab();
 
-            Assert.True(machineSetup.MachineIsActive(TestData.MachineNumber));
+            Assert.True(machineSetup.MachineIsActive(TestData.DefaultMachineNumber));
 
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, false);
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, false);
             machineSetup.ClickRefreshButton();
 
-            Assert.False(machineSetup.MachineIsActive(TestData.MachineNumber));
+            Assert.False(machineSetup.MachineIsActive(TestData.DefaultMachineNumber));
         }
 
 
         [Test]
         public async Task Test()
         {
-            //set machine to Active in database
-            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.MachineNumber, true);
+            /*set machine to Active in database
+            await LotteryRetailDatabase.UpdateMachineActivedFlag(TestData.DefaultMachineNumber, true);
 
             loginPage.Login("user1", "Diamond1#");
             navMenu.ClickMachineSetupTab();
 
             machineSetup.SelectRowByMachineNumber("00001");
             machineSetup.ClickDuplicateMachine();
+            */
+            
         }
     }
 }

@@ -12,6 +12,7 @@ namespace CentroLink_Automation
     public class DataGridPage : BasePage
     {
         public virtual By DataGrid { get; set; }
+        public virtual By RowSelector { get; set; }
 
         public DataGridPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {
@@ -19,6 +20,7 @@ namespace CentroLink_Automation
 
             //elements
             DataGrid = By.ClassName("DataGrid");
+            RowSelector = By.ClassName("DataGridRow");
         }
 
 
@@ -27,7 +29,7 @@ namespace CentroLink_Automation
             get
             {
                 WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
-                var rows = list.FindElements(By.ClassName("DataGridRow"));
+                var rows = list.FindElements(RowSelector);
 
                 return rows.Count;
             }

@@ -44,7 +44,7 @@ namespace CentroLink_Automation
 
 
         [SetUp]
-        public void Setup()
+        public virtual async Task Setup()
         {
             
             SessionManager.Init();
@@ -55,10 +55,9 @@ namespace CentroLink_Automation
 
 
         [TearDown]
-        public async Task EndTest()
+        public virtual async Task EndTest()
         {
-            // SessionManager.Close();
-            await LotteryRetailDatabase.ResetTestMachine();
+            SessionManager.Close();
         }
     }
 }
