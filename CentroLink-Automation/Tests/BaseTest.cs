@@ -6,40 +6,59 @@ using Appium;
 using OpenQA.Selenium.Appium;   //Appium Options
 using System.Threading;
 using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Transactions;
 
 namespace CentroLink_Automation
 {
+    [TestFixture]
     public abstract class BaseTest
     {
         protected WindowsDriver<WindowsElement> driver;
+        protected NavMenu navMenu;
+        protected string ConnectionString;
+        protected DatabaseManager LotteryRetailDatabase;
+        protected readonly string TestMachineId = "00001";
 
-        public BaseTest()
+        [OneTimeSetUp]
+        public void OneTimeSetup()
         {
+            ConnectionString = $"Server = 10.0.50.186; Database = LotteryRetail; User Id=sa; Password=3m3r@ld!; MultipleActiveResultSets=True";
+            SqlConnection conn = new SqlConnection(ConnectionString);
+            conn.Open();
 
+            LotteryRetailDatabase = new DatabaseManager(conn);
+
+            
         }
-
 
 
         [SetUp]
         public void Setup()
         {
+            
             SessionManager.Init();
             driver = SessionManager.Driver;
+
+            navMenu = new NavMenu(driver);
         }
 
 
         [TearDown]
-        public void EndTest()
+        public async Task EndTest()
         {
-            SessionManager.Close();
-        }
-
-
-        //Press Yes button on confirmation prompt asking to confirm close application
-        protected void ConfirmCloseApplication()
-        {
-            string yesBtnXpath = "//Window[@ClassName=\"Window\"][@Name=\"Confirm Action\"]/Button[@Name=\"Yes\"]";
-            driver.FindElementByXPath("//Window[@Name='Confirm Action']/Button[@Name='Yes']").Click();
+            // SessionManager.Close();
+            await LotteryRetailDatabase.ResetTestMachine();
         }
     }
 }
