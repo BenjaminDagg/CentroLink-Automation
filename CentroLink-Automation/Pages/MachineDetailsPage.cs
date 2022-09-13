@@ -25,7 +25,6 @@ namespace CentroLink_Automation
         public SingleChoiceAlertWindow ErrorWindow { get; set; }
         public SingleChoiceAlertWindow SuccessWindow { get; set; } 
         public MultiChoiceAlertWindow RemoveGameWindow { get; set; }
-
         public override By DataGrid { get => new ByAccessibilityId("GameSetupList"); }
         public override By RowSelector { get => By.ClassName("ListViewItem");}
 
@@ -143,6 +142,30 @@ namespace CentroLink_Automation
             WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(SerialNumberField));
 
             return element.Text;
+        }
+
+
+        public bool SerialNumberErrorIsDisplayed()
+        {
+            try
+            {
+                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(SerialNumberField));
+                string helpText = element.GetAttribute("HelpText");
+
+                if (string.IsNullOrEmpty(helpText))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
 

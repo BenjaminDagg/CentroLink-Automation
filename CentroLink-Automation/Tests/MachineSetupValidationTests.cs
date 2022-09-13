@@ -569,5 +569,81 @@ namespace CentroLink_Automation
             Assert.AreEqual("Enabled", addMachinePage.GetHeader(2));
         }
 
+
+        [Test]
+        public void AddMachine_SerialNo_Empty()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 "",
+                 TestData.TestMachineIpAddress,
+                 0,
+                 0
+            );
+
+            addMachinePage.Save();
+
+            Assert.True(addMachinePage.SerialNumberErrorIsDisplayed());
+        }
+
+
+        [Test]
+        public void AddMachine_SerialNo_MaxLength()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 new string('a',16),
+                 TestData.TestMachineIpAddress,
+                 0,
+                 0
+            );
+
+            addMachinePage.Save();
+
+            string sn = addMachinePage.GetSerialNumber();
+            Assert.AreEqual(15,sn.Length);
+        }
+
+
+        [Test]
+        public void AddMachine_SerialNo_SpecialCharacters()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 "abc123!@#",
+                 TestData.TestMachineIpAddress,
+                 0,
+                 0
+            );
+
+            addMachinePage.Save();
+
+            Assert.True(addMachinePage.SuccessWindow.IsOpen);
+        }
+
     }
 }
