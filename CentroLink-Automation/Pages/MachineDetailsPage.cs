@@ -19,10 +19,6 @@ namespace CentroLink_Automation
         protected By LocationMachineNumberField;
         protected By SerialNumberField;
         protected By DescriptionField;
-        protected By GameDropdownSelector;
-        public DropdownElement GameDropdown;
-        protected By BankDropdownSelector;
-        public DropdownElement BankDropdown;
         protected By SaveButton;
         protected By BackButton;
         public ConfirmationWindow ConfirmationWindow { get; set; }
@@ -49,12 +45,6 @@ namespace CentroLink_Automation
             ErrorWindow = new ErrorWindow(driver);
             SuccessWindow = new SuccessWindow(driver);
             RemoveGameWindow = new RemoveGameWindow(driver);
-
-            BankDropdownSelector = By.XPath("(//ComboBox[@ClassName='ComboBox'])[1]");
-            BankDropdown = new DropdownElement(BankDropdownSelector, driver);
-
-            GameDropdownSelector = By.XPath("(//ComboBox[@ClassName='ComboBox'])[2]");
-            GameDropdown = new DropdownElement(GameDropdownSelector, driver);
         }
 
 
@@ -238,11 +228,6 @@ namespace CentroLink_Automation
         }
 
 
-        public void ClickBankDropdown()
-        {
-            BankDropdown.Click();
-        }
-
 
         public void SelectBank(int index)
         {
@@ -270,10 +255,20 @@ namespace CentroLink_Automation
 
         public bool BankErrorIsDisplayed()
         {
+            return BankErrorIsDisplayedForGameNum(0);
+        }
+
+
+        public bool BankErrorIsDisplayedForGameNum(int rowNum)
+        {
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
             try
             {
-                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(BankDropdownSelector));
-                string helpText = element.GetAttribute("HelpText");
+                By dropdownXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom/ComboBox");
+                var bankElement = gameList.FindElement(dropdownXpath);
+
+                string helpText = bankElement.GetAttribute("HelpText");
 
                 if (string.IsNullOrEmpty(helpText))
                 {
@@ -283,18 +278,11 @@ namespace CentroLink_Automation
                 {
                     return true;
                 }
-
             }
             catch (Exception ex)
             {
                 return false;
             }
-        }
-
-
-        public void ClickGameDropdown()
-        {
-            GameDropdown.Click();
         }
 
 
@@ -313,22 +301,32 @@ namespace CentroLink_Automation
 
         public List<string> GetGameOptions()
         {
-            return GameDropdown.Options;
+            return GetGameOptions(0);
         }
 
 
         public string GetSelectedGame()
         {
-            return GameDropdown.SelectedOption;
+            return GetSelectedGame(0);
         }
 
 
         public bool GameErrorIsDisplayed()
         {
+            return GameErrorIsDisplayedForRow(0);
+        }
+
+
+        public bool GameErrorIsDisplayedForRow(int rowNum)
+        {
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
             try
             {
-                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(GameDropdownSelector));
-                string helpText = element.GetAttribute("HelpText");
+                By dropdownXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom[2]/ComboBox");
+                var gameElement = gameList.FindElement(dropdownXpath);
+
+                string helpText = gameElement.GetAttribute("HelpText");
 
                 if (string.IsNullOrEmpty(helpText))
                 {
@@ -338,10 +336,10 @@ namespace CentroLink_Automation
                 {
                     return true;
                 }
-
             }
             catch (Exception ex)
             {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
                 return false;
             }
         }
@@ -369,7 +367,7 @@ namespace CentroLink_Automation
         //Select bank for a row in the Game List by index of the bank in the dropdown list.
         public void SelectBank(int rowNum, int optionIndex)
         {
-            Console.WriteLine(RowCount);
+            
             WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
 
             try
@@ -450,7 +448,7 @@ namespace CentroLink_Automation
 
         public void SelectGame(int rowNum, int optionIndex)
         {
-            Console.WriteLine(RowCount);
+            
             WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
 
             try
