@@ -9,7 +9,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 namespace CentroLink_Automation
 {
-    public class PopupWindow
+    public class AlertWindow
     {
         protected WindowsDriver<WindowsElement> driver;
         protected DefaultWait<WindowsDriver<WindowsElement>> wait;
@@ -17,7 +17,7 @@ namespace CentroLink_Automation
         protected virtual By Window { get; set; }
         protected virtual By CloseButton { get; set; }
 
-        public PopupWindow(WindowsDriver<WindowsElement> _driver)
+        public AlertWindow(WindowsDriver<WindowsElement> _driver)
         {
             this.driver = _driver;
             wait = new DefaultWait<WindowsDriver<WindowsElement>>(driver);
