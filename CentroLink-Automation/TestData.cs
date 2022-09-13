@@ -18,6 +18,8 @@ namespace CentroLink_Automation
         public const string TestMachineSerialNumber = "00002";
         public const string TestMachineIpAddress = "54.72.125.232";
 
+        public const int TestBankNumber = 1;
+
         public const int LocationId = 339577;
 
         public const string AdminUsername = "user1";

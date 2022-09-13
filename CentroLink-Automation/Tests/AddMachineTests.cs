@@ -2,6 +2,7 @@
 using System.Threading;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CentroLink_Automation
 {
@@ -32,6 +33,7 @@ namespace CentroLink_Automation
 
             await LotteryRetailDatabase.DeleteMachine(TestData.TestMachineNumber);
             await LotteryRetailDatabase.ResetTestMachine();
+            await LotteryRetailDatabase.ResetTestBank();
         }
 
 
@@ -444,6 +446,59 @@ namespace CentroLink_Automation
         }
 
 
+        [Test]
+        public void AddMachine_IP_MaxLength()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 TestData.TestMachineSerialNumber,
+                 "111.111.111.111.1",
+                 0,
+                 0
+            );
+
+            addMachinePage.Save();
+
+            Assert.True(addMachinePage.IPAddressErrorIsDisplayed());
+
+        }
+
+
+        [Test]
+        [TestCase("111.111.111.256")] //max 255
+        [TestCase("111.111.111.-1")]
+        [TestCase("111.111.111")]   //3 octets
+        [TestCase("111.111.111.111.111")] //5 octeets
+        [TestCase("111.111.1111111")] //missing period
+        [TestCase("111.111..111.111")]
+        public void AddMachine_IP_Invalid(string ip)
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 TestData.TestMachineSerialNumber,
+                 ip,
+                 0,
+                 0
+            );
+
+            addMachinePage.Save();
+
+            Assert.True(addMachinePage.IPAddressErrorIsDisplayed());
+        }
+
+
         //Only numbers and decimals are allowed for IP Address
         [Test]
         [TestCase("123.abc.111.111")]
@@ -468,6 +523,145 @@ namespace CentroLink_Automation
 
             Assert.True(addMachinePage.IPAddressErrorIsDisplayed());
 
+        }
+
+
+        [Test]
+        public void AddMachine_Bank_Empty()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 TestData.TestMachineSerialNumber,
+                 TestData.TestMachineIpAddress,
+                 -1,    //invalid index wont select a bank
+                 0
+            );
+
+            addMachinePage.Save();
+
+            Assert.True(addMachinePage.BankErrorIsDisplayed());
+        }
+
+
+        //bank dropdown has list of all active banks in the database
+        [Test]
+        public async Task AddMachine_Bank_Options()
+        {
+            var banks = await LotteryRetailDatabase.GetAllBanks(filterActive: true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            var bankOptions = addMachinePage.GetBankOptions();
+
+            Assert.AreEqual(banks.Count,bankOptions.Count);
+        }
+
+
+        //Inactive banks are hidden in dropdown
+        [Test]
+        public async Task AddMachine_Bank_InActive()
+        {
+            var bank = await LotteryRetailDatabase.GetBankByBankNumber(TestData.TestBankNumber);
+            Assert.NotNull(bank);
+
+            string expected = $"{bank.BankNumber}: {bank.GameTypeCode} - {bank.Description}";
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            var bankOptions = addMachinePage.GetBankOptions();
+            var match = bankOptions.FirstOrDefault(bank => bank == expected);
+
+            Assert.NotNull(match);
+
+            await LotteryRetailDatabase.UpdateBankIsActive(TestData.TestBankNumber,false);
+
+            addMachinePage.ReturnToMachineSetup();
+            machineSetup.ClickAddMachine();
+
+            bankOptions = addMachinePage.GetBankOptions();
+            match = bankOptions.FirstOrDefault(bank => bank == expected);
+
+            Assert.Null(match);
+
+        }
+
+
+        [Test]
+        public async Task AddMachine_Game_ForBank()
+        {
+            var bank = await LotteryRetailDatabase.GetBankByBankNumber(TestData.TestBankNumber);
+            Assert.NotNull(bank);
+
+            var games = await LotteryRetailDatabase.GetGamesForBankNumber(TestData.TestBankNumber);
+            games.ForEach(game => Console.WriteLine(game.GameDescription));
+
+            string expected = $"{bank.BankNumber}: {bank.GameTypeCode} - {bank.Description}";
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            addMachinePage.SelectBank(expected);
+
+            var gameOptions = addMachinePage.GetGameOptions();
+            Assert.Greater(gameOptions.Count, 0);
+
+            Assert.AreEqual(games.Count, gameOptions.Count);
+
+        }
+
+
+        [Test]
+        public async Task AddMachine_GameIsEnabled_Default()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            bool isEnabled = addMachinePage.GameIsEnabled(0);
+            Assert.True(isEnabled);
+        }
+
+
+        [Test]
+        public async Task AddMachine_GameIsEnabled_MultiGame()
+        {
+            await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber,true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+            Thread.Sleep(10000);
+        }
+
+
+        [Test]
+        public void AddMachine_GameList_Columns()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.ClickAddMachine();
+
+            Assert.AreEqual("Bank", addMachinePage.GetHeader(0));
+            Assert.AreEqual("Game", addMachinePage.GetHeader(1));
+            Assert.AreEqual("Enabled", addMachinePage.GetHeader(2));
         }
 
 
@@ -507,55 +701,28 @@ namespace CentroLink_Automation
 
 
         [Test]
-        public async Task Test()
+        public void AddMachine_Success()
         {
-
-            loginPage.Login("user1", "Diamond1#");
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
             navMenu.ClickMachineSetupTab();
-            Console.WriteLine("machine setup count = " + machineSetup.RowCount);
-            //machineSetup.ClickAddMachine();
+
             machineSetup.ClickAddMachine();
 
-            addMachinePage.EnterMachineNumber("test");
-            Console.WriteLine("You entered: " + addMachinePage.GetMachineNumber());
-            /*
-            addMachinePage.EnterMachineNumber("mNum");
-            addMachinePage.EnterLocationMachineNumber("lmn");
-            addMachinePage.EnterSerialNumber("SN");
-            addMachinePage.EnterIPAddress("ip");
-            addMachinePage.EnterDescription("Description");*/
+            addMachinePage.EnterForm(
+                 TestData.TestMachineNumber,
+                 TestData.TestLocationMachineNumber,
+                 TestData.TestMachineSerialNumber,
+                 TestData.TestMachineIpAddress,
+                 0,
+                 0
+            );
 
-            /*
-            var banks = addMachinePage.GetBankOptions();
-            foreach (var bank in banks)
-            {
-                Console.WriteLine(bank);
-            }
-            Console.WriteLine("test");
-            addMachinePage.SelectBank(banks[1]);
-            Console.WriteLine("You selected: " + addMachinePage.GetSelectedBank());
-            
-
-            addMachinePage.GetGameOptions().ForEach(game => Console.WriteLine(game));
-
-            addMachinePage.GameDropdown.SelectByName("Blues N Bucks",false);
-            Console.WriteLine("You selected: " + addMachinePage.GetSelectedGame());
             addMachinePage.Save();
-            */
 
-            /*
-            var banks = addMachinePage.GetBankOptions(0);
-            Console.WriteLine("FOund banks: ");
-            foreach(var bank in banks)
-            {
-                Console.WriteLine(bank);    
-            }
-            addMachinePage.SelectBank(0, banks[1]);
-            Console.WriteLine("Selected Bank: " + addMachinePage.GetSelectedBank(0));
-            addMachinePage.GetGameOptions(0).ForEach(game => Console.WriteLine(game));
-            addMachinePage.SelectGame(0, "9Y2 - American Dreams 50 Cent");
-            Console.WriteLine("Selected game: " + addMachinePage.GetSelectedGame(0));
-            */
+            Assert.True(addMachinePage.SuccessWindow.IsOpen);
+            addMachinePage.SuccessWindow.Confirm();
+
+            Assert.True(machineSetup.MachineFoundInList(TestData.TestMachineNumber));
         }
 
 

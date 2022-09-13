@@ -12,7 +12,7 @@ namespace CentroLink_Automation
     public class PopupWindow
     {
         protected WindowsDriver<WindowsElement> driver;
-        protected WebDriverWait wait;
+        protected DefaultWait<WindowsDriver<WindowsElement>> wait;
         protected int WAIT_TIMEOUT_SEC = 5;
         protected virtual By Window { get; set; }
         protected virtual By CloseButton { get; set; }
@@ -20,19 +20,27 @@ namespace CentroLink_Automation
         public PopupWindow(WindowsDriver<WindowsElement> _driver)
         {
             this.driver = _driver;
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(WAIT_TIMEOUT_SEC));
+            wait = new DefaultWait<WindowsDriver<WindowsElement>>(driver);
+            wait.Timeout = TimeSpan.FromSeconds(5);
 
             Window = By.Name("Confirm Action");
         }
 
 
-        public bool IsOpen
+        public virtual bool IsOpen
         {
             get
             {
                 try
                 {
-                    wait.Until(d => d.FindElement(Window));
+
+                    Thread.Sleep(1000);
+                    wait.Until(d =>
+                    {
+                        WindowsElement element = d.FindElement(Window);
+
+                        return element != null;
+                    });
                     return true;
                 }
                 catch (Exception ex)

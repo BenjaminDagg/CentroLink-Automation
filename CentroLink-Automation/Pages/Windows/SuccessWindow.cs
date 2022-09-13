@@ -21,7 +21,7 @@ namespace CentroLink_Automation
             this.driver = _driver;
 
             Window = By.Name("Success");
-
+            ConfirmButton = new ByAccessibilityId("Ok");
         }
 
 

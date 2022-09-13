@@ -12,14 +12,14 @@ namespace CentroLink_Automation
     public class ErrorWindow : PopupWindow
     {
 
-        protected override By Window { get => By.Name("Error");}
+        protected override By Window { get => By.XPath("//Window[@Name='Error']");}
         private By ConfirmButton;
 
         public ErrorWindow(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {
             this.driver = _driver;
 
-            Window = By.Name("Error");
+            Window = By.XPath("//Window[@Name='Error']");
             ConfirmButton = By.Name("Ok");
         }
 

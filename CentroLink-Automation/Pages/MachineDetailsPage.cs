@@ -28,6 +28,7 @@ namespace CentroLink_Automation
         public ConfirmationWindow ConfirmationWindow { get; set; }
         public ErrorWindow ErrorWindow { get; set; }
         public SuccessWindow SuccessWindow { get; set; } 
+        public RemoveGameWindow RemoveGameWindow { get; set; }
 
         public override By DataGrid { get => new ByAccessibilityId("GameSetupList"); }
         public override By RowSelector { get => By.ClassName("ListViewItem");}
@@ -47,6 +48,7 @@ namespace CentroLink_Automation
             ConfirmationWindow = new ConfirmationWindow(driver);
             ErrorWindow = new ErrorWindow(driver);
             SuccessWindow = new SuccessWindow(driver);
+            RemoveGameWindow = new RemoveGameWindow(driver);
 
             BankDropdownSelector = By.XPath("(//ComboBox[@ClassName='ComboBox'])[1]");
             BankDropdown = new DropdownElement(BankDropdownSelector, driver);
@@ -266,6 +268,30 @@ namespace CentroLink_Automation
         }
 
 
+        public bool BankErrorIsDisplayed()
+        {
+            try
+            {
+                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(BankDropdownSelector));
+                string helpText = element.GetAttribute("HelpText");
+
+                if (string.IsNullOrEmpty(helpText))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
         public void ClickGameDropdown()
         {
             GameDropdown.Click();
@@ -294,6 +320,30 @@ namespace CentroLink_Automation
         public string GetSelectedGame()
         {
             return GameDropdown.SelectedOption;
+        }
+
+
+        public bool GameErrorIsDisplayed()
+        {
+            try
+            {
+                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(GameDropdownSelector));
+                string helpText = element.GetAttribute("HelpText");
+
+                if (string.IsNullOrEmpty(helpText))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
 
@@ -488,6 +538,98 @@ namespace CentroLink_Automation
             EnterIPAddress(ipAddress);
             SelectBank(bankIndex);
             SelectGame(gameIndex);
+        }
+
+
+        public bool GameIsEnabled(int rowNum)
+        {
+            Console.WriteLine(RowCount);
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
+            try
+            {
+                By checkboxXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom[3]/CheckBox");
+                var checkbox = gameList.FindElement(checkboxXpath);
+
+                return checkbox.Selected;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
+                return false;
+            }
+        }
+
+
+        public void SetGameEnabledByRow(int rowNum,bool isEnabled)
+        {
+            Console.WriteLine(RowCount);
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
+            try
+            {
+                By checkboxXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom[3]/CheckBox");
+                var checkbox = gameList.FindElement(checkboxXpath);
+
+                if (checkbox.Selected)
+                {
+                    if(isEnabled == false)
+                    {
+                        checkbox.Click();
+                    }
+                }
+                else
+                {
+                    if(isEnabled == true)
+                    {
+                        checkbox.Click();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
+                
+            }
+        }
+
+
+        private void ClickRemoveGame(int rowNum)
+        {
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
+            try
+            {
+                By removeBtnXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom[4]/Button");
+                var button = gameList.FindElement(removeBtnXpath);
+
+                button.Click();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
+                
+            }
+        }
+
+
+        public void RemoveGameByRow(int rowNum)
+        {
+            WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
+            try
+            {
+                By removeBtnXpath = By.XPath(".//DataItem[" + (rowNum + 1) + "]/Custom[4]/Button");
+                var button = gameList.FindElement(removeBtnXpath);
+
+                button.Click();
+                RemoveGameWindow.Confirm();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
+
+            }
         }
     }
 }

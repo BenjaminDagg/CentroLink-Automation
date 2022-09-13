@@ -48,13 +48,41 @@ namespace CentroLink_Automation
         {
 
             var query = "update MACH_SETUP " +
-                "set REMOVED_FLAG = 0, " +
-                "ACTIVE_FLAG = 1, CASINO_MACH_NO = @LocationMachineNumber " +
-                "where MACH_NO = @MachNo";
+                            "set REMOVED_FLAG = 0, " +
+                            "ACTIVE_FLAG = 1, " +
+                            "CASINO_MACH_NO = @LocationMachineNumber ," +
+                            "MultiGameEnabled = 0" +
+                        "where MACH_NO = @MachNo";
 
             SqlCommand command = new SqlCommand(query, DbConnection);
             command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = TestData.DefaultMachineNumber;
             command.Parameters.Add("@LocationMachineNumber", System.Data.SqlDbType.VarChar).Value = TestData.DefaultLocationMachineNumber;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task ResetTestBank()
+        {
+
+            var query = "update BANK set " +
+                            "BANK_DESCR = 'AD BnB PullTab 1 Dollar'," +
+                            "PROG_FLAG = 0, " +
+                            "PROG_AMT = '0.00'," +
+                            "LAST_JP_AMOUNT = NULL, " +
+                            "LAST_JP_TIME = NULL, " +
+                            "GAME_TYPE_CODE = '9X'," +
+                            "PRODUCT_LINE_ID = 18," +
+                            "IS_PAPER = 1, " +
+                            "LOCKUP_AMOUNT = 600.01," +
+                            "ENTRY_TICKET_FACTOR = 3, " +
+                            "ENTRY_TICKET_AMOUNT = 0.00, " +
+                            "DBA_LOCKUP_AMOUNT = 500.00, " +
+                            "IS_ACTIVE = 1 " +
+                         "where BANK_NO = @BankNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@BankNo", System.Data.SqlDbType.VarChar).Value = TestData.TestBankNumber;
 
             var result = await command.ExecuteNonQueryAsync();
         }
@@ -189,6 +217,108 @@ namespace CentroLink_Automation
             SqlCommand command = new SqlCommand(query, DbConnection);
             command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = machNo;
 
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task<List<Bank>> GetAllBanks(bool filterActive = true)
+        {
+            
+            var query = "select * from BANK where IS_ACTIVE = @IsActive";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@IsActive", System.Data.SqlDbType.VarChar).Value = filterActive;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            var banks = new List<Bank>();
+
+            while (reader.Read())
+            {
+                int bankNum = reader.GetInt32(0);
+
+                banks.Add(new Bank() { BankNumber = bankNum });
+            }
+
+            return banks;
+        }
+
+
+        public async Task<Bank> GetBankByBankNumber(int bankNo)
+        {
+
+            var query = "select * from BANK where BANK_NO = @BankNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@BankNo", System.Data.SqlDbType.Int).Value = bankNo;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            var bank = new Bank();
+
+            while (reader.Read())
+            {
+                
+                bank.BankNumber = reader.GetInt32(0);
+                bank.Description = reader.GetString(1);
+                bank.GameTypeCode = reader.GetString(6);
+                bank.IsActive = reader.GetBoolean(13);
+            }
+
+            return bank;
+        }
+
+
+        public async Task UpdateBankIsActive(int bankNum, bool isActive)
+        {
+
+            var query = "update BANK set IS_ACTIVE = @IsActive where BANK_NO = @BankNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@BankNo", System.Data.SqlDbType.Int).Value = bankNum;
+            command.Parameters.Add("@IsActive", System.Data.SqlDbType.Bit).Value = isActive;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task<List<Game>> GetGamesForBankNumber(int bankNum)
+        {
+
+            var query = "select * from GAME_SETUP where GAME_TYPE_CODE = (select GAME_TYPE_CODE from BANK where BANK_NO = @BankNo)";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@BankNo", System.Data.SqlDbType.Int).Value = bankNum;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            var games = new List<Game>();
+
+            while (reader.Read())
+            {
+                var newGame = new Game();
+
+                newGame.GameCode = reader.GetString(0);
+                newGame.GameDescription = reader.GetString(1);
+                newGame.TypeId = reader.GetString(2)[0];
+                newGame.GameTypeCode = reader.GetString(3);
+
+                games.Add(newGame);
+            }
+
+            return games;
+        }
+
+
+        public async Task UpdateMachineMultiGameEnabled(string MachNo, bool multiGameEnabled)
+        {
+
+            var query = "update MACH_SETUP set MultiGameEnabled = @IsEnabled where MACH_NO = @MachNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = MachNo;
+            command.Parameters.Add("@IsEnabled", System.Data.SqlDbType.Bit).Value = multiGameEnabled;
 
             var result = await command.ExecuteNonQueryAsync();
         }
