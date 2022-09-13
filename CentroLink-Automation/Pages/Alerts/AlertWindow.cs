@@ -17,13 +17,13 @@ namespace CentroLink_Automation
         protected virtual By Window { get; set; }
         protected virtual By CloseButton { get; set; }
 
-        public AlertWindow(WindowsDriver<WindowsElement> _driver)
+        public AlertWindow(WindowsDriver<WindowsElement> _driver, By windowSelector)
         {
             this.driver = _driver;
             wait = new DefaultWait<WindowsDriver<WindowsElement>>(driver);
             wait.Timeout = TimeSpan.FromSeconds(5);
 
-            Window = By.Name("Confirm Action");
+            Window = windowSelector;
         }
 
 

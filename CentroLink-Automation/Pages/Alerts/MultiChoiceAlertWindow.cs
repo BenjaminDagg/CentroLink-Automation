@@ -10,19 +10,19 @@ using OpenQA.Selenium.Support.UI;
 
 namespace CentroLink_Automation
 {
-    public class RemoveGameWindow : PopupWindow
+
+    //Alert window containing two buttons: Yes or No
+    public class MultiChoiceAlertWindow : AlertWindow
     {
 
-        protected override By Window { get => By.Name("Remove Game?"); }
+        protected virtual By ConfirmButton { get; set; }
+        protected virtual By CancelButton { get; set; }
 
-        protected By ConfirmButton;
-        protected By CancelButton;
-
-        public RemoveGameWindow(WindowsDriver<WindowsElement> _driver) : base(_driver)
+        public MultiChoiceAlertWindow(WindowsDriver<WindowsElement> _driver, By windowSelector) : base(_driver,windowSelector)
         {
             this.driver = _driver;
 
-            Window = By.Name("Confirm Action");
+            Window = windowSelector;
             ConfirmButton = new ByAccessibilityId("Yes");
             CancelButton = new ByAccessibilityId("No");
         }

@@ -7,21 +7,21 @@ using OpenQA.Selenium.Appium;   //Appium Options
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-
 namespace CentroLink_Automation
 {
-    public class SuccessWindow : PopupWindow
+
+    //Alert window with only 1 choice: OK button
+    public class SingleChoiceAlertWindow : AlertWindow
     {
+
         private By ConfirmButton;
 
-        protected override By Window { get => By.Name("Success");}
-
-        public SuccessWindow(WindowsDriver<WindowsElement> _driver) : base(_driver)
+        public SingleChoiceAlertWindow(WindowsDriver<WindowsElement> _driver, By windowSelector) : base(_driver,windowSelector)
         {
             this.driver = _driver;
 
-            Window = By.Name("Success");
-            ConfirmButton = new ByAccessibilityId("Ok");
+            Window = windowSelector;
+            ConfirmButton = By.Name("Ok");
         }
 
 

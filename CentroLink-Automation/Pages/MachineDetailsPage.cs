@@ -21,10 +21,10 @@ namespace CentroLink_Automation
         protected By DescriptionField;
         protected By SaveButton;
         protected By BackButton;
-        public ConfirmationWindow ConfirmationWindow { get; set; }
-        public ErrorWindow ErrorWindow { get; set; }
-        public SuccessWindow SuccessWindow { get; set; } 
-        public RemoveGameWindow RemoveGameWindow { get; set; }
+        public MultiChoiceAlertWindow ConfirmationWindow { get; set; }
+        public SingleChoiceAlertWindow ErrorWindow { get; set; }
+        public SingleChoiceAlertWindow SuccessWindow { get; set; } 
+        public MultiChoiceAlertWindow RemoveGameWindow { get; set; }
 
         public override By DataGrid { get => new ByAccessibilityId("GameSetupList"); }
         public override By RowSelector { get => By.ClassName("ListViewItem");}
@@ -41,10 +41,10 @@ namespace CentroLink_Automation
             DescriptionField = By.XPath("(//Edit[@IsEnabled='True'])[5]");
             SaveButton = By.Name("Save");
             BackButton = By.Name("Back");
-            ConfirmationWindow = new ConfirmationWindow(driver);
-            ErrorWindow = new ErrorWindow(driver);
-            SuccessWindow = new SuccessWindow(driver);
-            RemoveGameWindow = new RemoveGameWindow(driver);
+            ConfirmationWindow = new MultiChoiceAlertWindow(driver,By.Name("Confirm Action"));
+            ErrorWindow = new SingleChoiceAlertWindow(driver,By.Name("Error"));
+            SuccessWindow = new SingleChoiceAlertWindow(driver, By.Name("Success"));
+            RemoveGameWindow = new MultiChoiceAlertWindow(driver,By.Name("Remove Game?"));
         }
 
 
