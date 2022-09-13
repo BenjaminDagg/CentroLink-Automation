@@ -124,6 +124,27 @@ namespace CentroLink_Automation
         }
 
 
+        public int RowNumberOfMachine(string machineNumber)
+        {
+            WindowsElement machineList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = machineList.FindElements(By.ClassName("DataGridRow"));
+
+            int i = 0;
+            foreach (var row in rows)
+            {
+                string machineNo = row.FindElement(By.XPath("(//Custom[@ClassName='DataGridCell'])[1]")).Text;
+                
+                if (machineNo == machineNumber)
+                {
+                    return i;
+                }
+                i++;
+            }
+
+            return -1;
+        }
+
+
         public bool MachineIsActive(string machineNumber)
         {
             WindowsElement machineList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));

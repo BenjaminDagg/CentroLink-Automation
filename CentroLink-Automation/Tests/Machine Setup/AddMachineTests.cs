@@ -31,9 +31,9 @@ namespace CentroLink_Automation
         {
             base.EndTest();
 
-            await LotteryRetailDatabase.DeleteMachine(TestData.TestMachineNumber);
-            await LotteryRetailDatabase.ResetTestMachine();
-            await LotteryRetailDatabase.ResetTestBank();
+            //await LotteryRetailDatabase.DeleteMachine(TestData.TestMachineNumber);
+            //await LotteryRetailDatabase.ResetTestMachine();
+            //await LotteryRetailDatabase.ResetTestBank();
         }
 
 
@@ -127,12 +127,21 @@ namespace CentroLink_Automation
         {
             await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber,true);
 
+            /*
             loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
             navMenu.ClickMachineSetupTab();
 
             machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
             machineSetup.ClickEditMachine();
-            Thread.Sleep(10000);
+
+            bool enabledBefore = addMachinePage.GameIsEnabled(0);
+
+            addMachinePage.SetGameEnabledByRow(0,!enabledBefore);
+
+            bool enabledAfter = addMachinePage.GameIsEnabled(0);
+
+            Assert.AreNotEqual(enabledBefore, enabledAfter);
+            */
         }
 
 

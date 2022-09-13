@@ -14,13 +14,14 @@ namespace CentroLink_Automation
     public class MachineDetailsPage : DataGridPage
     {
 
-        protected By IpAddressField;
-        protected By MachineNumberField;
-        protected By LocationMachineNumberField;
-        protected By SerialNumberField;
-        protected By DescriptionField;
-        protected By SaveButton;
-        protected By BackButton;
+        protected virtual By IpAddressField { get; set; }
+        protected virtual By MachineNumberField { get; set; }
+        protected virtual By LocationMachineNumberField { get; set; }
+        protected virtual By SerialNumberField { get; set; }
+        protected virtual By DescriptionField { get; set; }
+        protected virtual By SaveButton { get; set; }
+        protected virtual By BackButton { get; set; }
+        protected By AddGameButton;
         public MultiChoiceAlertWindow ConfirmationWindow { get; set; }
         public SingleChoiceAlertWindow ErrorWindow { get; set; }
         public SingleChoiceAlertWindow SuccessWindow { get; set; } 
@@ -33,11 +34,13 @@ namespace CentroLink_Automation
             this.driver = _driver;
 
             //elements
+            
             MachineNumberField = By.XPath("(//Edit[@IsEnabled='True'])[1]");
             LocationMachineNumberField = By.XPath("(//Edit[@IsEnabled='True'])[2]");
             SerialNumberField = By.XPath("(//Edit[@IsEnabled='True'])[3]");
             IpAddressField = By.XPath("(//Edit[@IsEnabled='True'])[4]");
             DescriptionField = By.XPath("(//Edit[@IsEnabled='True'])[5]");
+            AddGameButton = new ByAccessibilityId("AddGame");
             SaveButton = By.Name("Save");
             BackButton = By.Name("Back");
             ConfirmationWindow = new MultiChoiceAlertWindow(driver,By.Name("Confirm Action"));
@@ -551,7 +554,7 @@ namespace CentroLink_Automation
         }
 
 
-        public void EnterForm(string machNo, string locationMachNo, string sn, string ipAddress,int bankIndex, int gameIndex)
+        public virtual void EnterForm(string machNo, string locationMachNo, string sn, string ipAddress,int bankIndex, int gameIndex)
         {
             EnterMachineNumber(machNo);
             EnterLocationMachineNumber(locationMachNo);
@@ -650,6 +653,55 @@ namespace CentroLink_Automation
             {
                 Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # " + rowNum);
 
+            }
+        }
+
+
+        public bool AddGameIsEnabled()
+        {
+            try
+            {
+                WindowsElement addGameBtn = (WindowsElement)wait.Until(d => d.FindElement(AddGameButton));
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+
+        public bool RemoveGameIsEnabled()
+        {
+            try
+            {
+                WindowsElement gameList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+
+                By removeBtnXpath = By.XPath(".//DataItem[1]/Custom[4]/Button");
+                var button = gameList.FindElement(removeBtnXpath);
+
+                return button.Enabled;
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MachineDetailsPage.SelectGame: Game dropdown not found for row # ");
+                return false;
+            }
+        }
+
+
+        public void ClickAddGame()
+        {
+            if(AddGameIsEnabled() == true)
+            {
+                int gameCount = RowCount;
+
+                WindowsElement addGameBtn = (WindowsElement)wait.Until(d => d.FindElement(AddGameButton));
+                addGameBtn.Click();
+
+                //wait for new row to appear in the list
+                wait.Until(d => d.FindElements(RowSelector).Count == (gameCount + 1));
             }
         }
     }

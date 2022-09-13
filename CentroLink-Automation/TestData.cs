@@ -19,6 +19,7 @@ namespace CentroLink_Automation
         public const string TestMachineIpAddress = "54.72.125.232";
 
         public const int TestBankNumber = 1;
+        public const string TestGameCode = "9X1";
 
         public const int LocationId = 339577;
 

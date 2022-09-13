@@ -46,19 +46,32 @@ namespace CentroLink_Automation
         //Resets test machine data back to original state after a test
         public async Task ResetTestMachine()
         {
+            var removeGamesQuery = "delete from MACH_SETUP_GAMES where MACH_NO = @MachNo and GAME_CODE <> @GameCode";
 
             var query = "update MACH_SETUP " +
-                            "set REMOVED_FLAG = 0, " +
+                            "set " +
+                            "REMOVED_FLAG = 0, " +
                             "ACTIVE_FLAG = 1, " +
                             "CASINO_MACH_NO = @LocationMachineNumber ," +
-                            "MultiGameEnabled = 0" +
+                            "MultiGameEnabled = 0, " +
+                            "MACH_SERIAL_NO = @SerialNumber, " +
+                            "IP_ADDRESS = @IPAddress, " +
+                            "BANK_NO = @BankId, " +
+                            "GAME_CODE = @GameCode " +
                         "where MACH_NO = @MachNo";
 
             SqlCommand command = new SqlCommand(query, DbConnection);
             command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = TestData.DefaultMachineNumber;
             command.Parameters.Add("@LocationMachineNumber", System.Data.SqlDbType.VarChar).Value = TestData.DefaultLocationMachineNumber;
+            command.Parameters.Add("@SerialNumber", System.Data.SqlDbType.VarChar).Value = TestData.DefaultSerialNumber;
+            command.Parameters.Add("@IPAddress", System.Data.SqlDbType.VarChar).Value = TestData.DefaultIPAddress;
+            command.Parameters.Add("@BankId", System.Data.SqlDbType.VarChar).Value = TestData.TestBankNumber;
+            command.Parameters.Add("@GameCode", System.Data.SqlDbType.VarChar).Value = TestData.TestGameCode;
 
             var result = await command.ExecuteNonQueryAsync();
+
+            command.CommandText = removeGamesQuery;
+            result = await command.ExecuteNonQueryAsync();
         }
 
 
@@ -303,6 +316,37 @@ namespace CentroLink_Automation
                 newGame.GameDescription = reader.GetString(1);
                 newGame.TypeId = reader.GetString(2)[0];
                 newGame.GameTypeCode = reader.GetString(3);
+
+                games.Add(newGame);
+            }
+
+            return games;
+        }
+
+
+        public async Task<List<Game>> GetGamesAssignedToMachine(string machNo)
+        {
+
+            var query = "select * from MACH_SETUP_GAMES " +
+                            "inner join GAME_Setup gs on " +
+                            "MACH_SETUP_GAMES.GAME_CODE = gs.GAME_CODE " +
+                        "where MACH_NO = @MachNo and IsEnabled = 1";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.Int).Value = machNo;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            var games = new List<Game>();
+
+            while (reader.Read())
+            {
+                var newGame = new Game();
+
+                newGame.GameCode = reader.GetString(2);
+                newGame.GameDescription = reader.GetString(10);
+                newGame.TypeId = reader.GetString(4)[0];
+                newGame.GameTypeCode = reader.GetString(12);
 
                 games.Add(newGame);
             }

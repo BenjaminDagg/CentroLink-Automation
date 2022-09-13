@@ -6,6 +6,7 @@ using Appium;
 using OpenQA.Selenium.Appium;   //Appium Options
 using System.Threading;
 using OpenQA.Selenium;
+using System.Collections.Generic;
 
 namespace CentroLink_Automation
 {
@@ -104,6 +105,23 @@ namespace CentroLink_Automation
             {
                 Console.WriteLine("GetMachine: Invalid row " + rowNum);
             }
+        }
+
+
+        public virtual List<string> GetValuesForColumn(int colNum)
+        {
+            WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = list.FindElements(RowSelector);
+
+            var values = new List<string>();
+
+            foreach(var row in rows)
+            {
+                var colItem = row.FindElement(By.XPath(".//Custom/Text"));
+                values.Add(colItem.Text);
+            }
+
+            return values;
         }
     }
 }
