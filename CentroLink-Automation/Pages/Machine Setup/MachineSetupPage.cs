@@ -9,6 +9,8 @@ using OpenQA.Selenium;
 using System.Linq;
 using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Support.UI;
+using System.Collections.Generic;
+using System.Net;
 
 namespace CentroLink_Automation
 {
@@ -239,6 +241,43 @@ namespace CentroLink_Automation
                     return;
                 }
             }
+        }
+
+
+        public static int NextAvailableMachineNumber(List<int> machNos, int start)
+        {
+            
+            int target = start;
+            while (machNos.Contains(target))
+            {
+                target++;
+            }
+
+            return target;
+
+        }
+
+
+        public static string NextAvailableIpAddress(List<string> ipAddresses, string startAddress)
+        {
+
+            string target = startAddress;
+            while (ipAddresses.Contains(target))
+            {
+                target = NextIpAddress(target, 1);
+            }
+
+            return target;
+
+        }
+
+
+        private static string NextIpAddress(string ipAddress, uint increment)
+        {
+            byte[] addressBytes = IPAddress.Parse(ipAddress).GetAddressBytes().Reverse().ToArray();
+            uint ipAsUint = BitConverter.ToUInt32(addressBytes, 0);
+            var nextAddress = BitConverter.GetBytes(ipAsUint + increment);
+            return String.Join(".", nextAddress.Reverse());
         }
     }
 }

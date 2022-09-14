@@ -117,7 +117,7 @@ namespace CentroLink_Automation
 
             foreach(var row in rows)
             {
-                var colItem = row.FindElement(By.XPath(".//Custom/Text"));
+                var colItem = row.FindElement(By.XPath(".//Custom[" + (colNum + 1) + "]/Text"));
                 values.Add(colItem.Text);
             }
 

@@ -326,7 +326,7 @@ namespace CentroLink_Automation
 
 
         [Test]
-        public async Task EditMachine_AddGame()
+        public async Task EditMachine_AssignNewGame()
         {
             await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
 
@@ -349,6 +349,99 @@ namespace CentroLink_Automation
 
             var assignedGames = await LotteryRetailDatabase.GetGamesAssignedToMachine(TestData.DefaultMachineNumber);
             Assert.AreEqual(2,assignedGames.Count);
+        }
+
+
+        [Test]
+        public async Task EditMachine_AddGame()
+        {
+            await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            int gameCountBefore = editMachine.RowCount;
+
+            var games = editMachine.GetGameOptions();
+            string currentSelection = editMachine.GetSelectedGame(0);
+            var newGame = games.Where(game => game.ToLower().Contains(TestData.TestGameCode.ToLower()) == false).FirstOrDefault();
+
+            editMachine.ClickAddGame();
+            editMachine.SelectBank(1, 0);
+            editMachine.SelectGame(1, newGame);
+
+            editMachine.Save();
+            editMachine.SuccessWindow.Confirm();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            Assert.AreEqual(gameCountBefore + 1, editMachine.RowCount);
+        }
+
+
+        [Test]
+        public async Task EditMachine_DuplicateGame_Error()
+        {
+            await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            Assert.Greater(editMachine.RowCount, 0);
+
+            string currentBank = editMachine.GetSelectedBank();
+            string currentGame = editMachine.GetSelectedGame();
+
+            editMachine.ClickAddGame();
+
+            editMachine.SelectBank(1,currentBank);
+            editMachine.SelectGame(1,currentGame);
+
+            editMachine.Save();
+
+            Assert.False(editMachine.SuccessWindow.IsOpen);
+        }
+
+
+        [Test]
+        public async Task EditMachine_RemoveGame()
+        {
+            await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            int gameCountBefore = editMachine.RowCount;
+
+            var games = editMachine.GetGameOptions();
+            string currentSelection = editMachine.GetSelectedGame(0);
+            var newGame = games.Where(game => game.ToLower().Contains(TestData.TestGameCode.ToLower()) == false).FirstOrDefault();
+
+            editMachine.ClickAddGame();
+            editMachine.SelectBank(1, 0);
+            editMachine.SelectGame(1, newGame);
+
+            editMachine.Save();
+            editMachine.SuccessWindow.Confirm();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            Assert.AreEqual(gameCountBefore + 1, editMachine.RowCount);
+
+            editMachine.RemoveGameByRow(1);
+
+            Assert.AreEqual(gameCountBefore, editMachine.RowCount);
         }
 
 
@@ -395,7 +488,7 @@ namespace CentroLink_Automation
 
 
         [Test]
-        public async Task EditMachine_RemoveGame()
+        public async Task EditMachine_UnassignGame()
         {
             await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
 

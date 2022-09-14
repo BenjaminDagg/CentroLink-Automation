@@ -8,6 +8,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using System.Linq;
 using System.Collections.Generic;
+using CentroLink_Automation.Pages.Machine_Setup;
 
 namespace CentroLink_Automation
 {
@@ -28,6 +29,7 @@ namespace CentroLink_Automation
         public MultiChoiceAlertWindow RemoveGameWindow { get; set; }
         public override By DataGrid { get => new ByAccessibilityId("GameSetupList"); }
         public override By RowSelector { get => By.ClassName("ListViewItem");}
+        public static MachineFields Fields { get; }
 
         public MachineDetailsPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {
@@ -565,6 +567,15 @@ namespace CentroLink_Automation
         }
 
 
+        public virtual void EnterForm(string machNo, string locationMachNo, string sn, string ipAddress)
+        {
+            EnterMachineNumber(machNo);
+            EnterLocationMachineNumber(locationMachNo);
+            EnterSerialNumber(sn);
+            EnterIPAddress(ipAddress);
+        }
+
+
         public bool GameIsEnabled(int rowNum)
         {
             Console.WriteLine(RowCount);
@@ -703,6 +714,36 @@ namespace CentroLink_Automation
                 //wait for new row to appear in the list
                 wait.Until(d => d.FindElements(RowSelector).Count == (gameCount + 1));
             }
+        }
+
+
+        public virtual bool IsReadOnly(MachineFields field)
+        {
+            By target;
+
+            switch (field)
+            {
+                case MachineFields.MachineNumber:
+                    target = MachineNumberField;
+                    break;
+                case MachineFields.LocationMachineNumber:
+                    target = LocationMachineNumberField;
+                    break;
+                case MachineFields.SerialNumber:
+                    target = SerialNumberField;
+                    break;
+                case MachineFields.IPAddress:
+                    target = IpAddressField;
+                    break;
+                case MachineFields.Description:
+                    target = DescriptionField;
+                    break;
+                default:
+                    target = MachineNumberField;
+                    break;
+            }
+
+            return driver.FindElement(target).Enabled;
         }
     }
 }
