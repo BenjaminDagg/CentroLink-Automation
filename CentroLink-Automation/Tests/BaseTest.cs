@@ -57,7 +57,7 @@ namespace CentroLink_Automation
         [TearDown]
         public virtual async Task EndTest()
         {
-            SessionManager.Close();
+            //SessionManager.Close();
         }
     }
 }

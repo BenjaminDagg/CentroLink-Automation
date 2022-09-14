@@ -8,6 +8,7 @@ namespace CentroLink_Automation
 {
     public static class TestData
     {
+        /* Machine Setup */
         public const string DefaultMachineNumber = "00001";    //default machine in the list
         public const string DefaultLocationMachineNumber = "00001";
         public const string DefaultIPAddress = "111.111.111.111";
@@ -25,5 +26,8 @@ namespace CentroLink_Automation
 
         public const string AdminUsername = "user1";
         public const string AdminPassword = "Diamond1#";
+
+        /* Deal Setup */
+        public const int TestDealNumber = 1000;
     }
 }

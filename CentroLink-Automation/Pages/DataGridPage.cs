@@ -7,6 +7,7 @@ using OpenQA.Selenium.Appium;   //Appium Options
 using System.Threading;
 using OpenQA.Selenium;
 using System.Collections.Generic;
+using OpenQA.Selenium.Interactions;
 
 namespace CentroLink_Automation
 {
@@ -105,6 +106,37 @@ namespace CentroLink_Automation
             {
                 Console.WriteLine("GetMachine: Invalid row " + rowNum);
             }
+        }
+
+
+        public virtual void SelectRows(params int[] rowNums)
+        {
+            WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = list.FindElements(By.ClassName("DataGridRow"));
+
+            Actions holdKeyAction = new Actions(driver);
+            holdKeyAction.KeyDown(Keys.Shift);
+            holdKeyAction.Build();
+
+            Actions releaseKeyAction = new Actions(driver);
+            holdKeyAction.KeyUp(Keys.Shift);
+            holdKeyAction.Build();
+
+            holdKeyAction.Perform();
+            foreach(int rowNum in rowNums)
+            {
+                try
+                {
+                    var row = list.FindElement(By.XPath("(.//DataItem[@ClassName='DataGridRow'])[" + (rowNum + 1) + "]"));
+                    row.Click();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("GetMachine: Invalid row " + rowNum);
+                }
+            }
+
+            releaseKeyAction.Perform();
         }
 
 

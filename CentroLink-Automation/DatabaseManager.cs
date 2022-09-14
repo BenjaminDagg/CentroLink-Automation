@@ -10,8 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Transactions;
-
-
+using System.Globalization;
 
 namespace CentroLink_Automation
 {
@@ -388,5 +387,84 @@ namespace CentroLink_Automation
 
             var result = await command.ExecuteNonQueryAsync();
         }
+
+
+        public async Task AddTestDeal()
+        {
+            string currentDateString = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
+            DateTime currentDate = DateTime.ParseExact(currentDateString, "yyyy-MM-dd HH-mm-ss.fff", CultureInfo.InvariantCulture);
+
+            var dealStatsQuery = "update DEAL_STATS " +
+                                    "set " +
+                                    "LAST_PLAY = @LastPlay, " +
+                                    "PLAY_COUNT = 1000" +
+                                  "where DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(dealStatsQuery, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = TestData.TestDealNumber;
+            command.Parameters.Add("@LastPlay", System.Data.SqlDbType.Date).Value = currentDate;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task ResetTestDeal()
+        {
+            string currentDateString = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
+            DateTime currentDate = DateTime.ParseExact(currentDateString, "yyyy-MM-dd HH-mm-ss.fff", CultureInfo.InvariantCulture);
+
+            var dealSetupReset = "update DEAL_SETUP " +
+                        "SET " +
+                        "IS_OPEN = 1 " +
+                        "WHERE DEAL_NO = @DealNo";
+
+            var dealStatsReset = "update DEAL_STATS " +
+                                    "set " +
+                                    "LAST_PLAY = @LastPlay, " +
+                                    "PLAY_COUNT = 1000 " +
+                                  "where DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(dealSetupReset, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = TestData.TestDealNumber;
+            command.Parameters.Add("@LastPlay", System.Data.SqlDbType.Date).Value = currentDate;
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            command.CommandText = dealStatsReset;
+            result = await command.ExecuteNonQueryAsync();
+
+        }
+
+
+        public async Task UpdateDealLastPlayMinusDays(int subtractDays,int dealNum)
+        {
+            
+            var query = "update DEAL_STATS " +
+                        "set " +
+                        "LAST_PLAY = " +
+                            "(select DATEADD(day,@DayCount,(select MAX(DTIMESTAMP) from CASINO_TRANS))) " +
+                        "where DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = dealNum;
+            command.Parameters.Add("@DayCount", System.Data.SqlDbType.Int).Value = subtractDays;
+
+            var result = await command.ExecuteNonQueryAsync();
+
+        }
+
+
+        public async Task ExecuteRecommendDealForClosePrecedure()
+        {
+            SqlCommand cmd = new SqlCommand("dbo.Recommend_Deal_For_Close", DbConnection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+            cmd.ExecuteNonQuery();
+        }
+
+
+        /* query to set play count > 98%
+         * update DSTATS set DSTATS.PLAY_COUNT = ((DS.TABS_PER_ROLL * ds.NUMB_ROLLS) * 0.99) from DEAL_STATS as DSTATS inner join DEAL_SETUP as DS on DSTATS.DEAL_NO = DS.DEAL_NO where DSTATS.DEAL_NO = 1000
+         */
     }
 }

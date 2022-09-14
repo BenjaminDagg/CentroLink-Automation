@@ -37,6 +37,7 @@ namespace CentroLink_Automation
         private int MaintenanceTabChildCount = 7;
         private int SettingsTabChildCount = 3;
         public By MachineSetupTab;
+        public By DealStatusTab;
         WebDriverWait wait;
         private int WaitTimeoutSec = 5;
         
@@ -50,6 +51,7 @@ namespace CentroLink_Automation
             MaintenanceTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[1]");
             SettingsTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[9]");
             MachineSetupTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[2]");
+            DealStatusTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[4]");
         }
 
 
@@ -93,6 +95,15 @@ namespace CentroLink_Automation
 
             WindowsElement machineTab = (WindowsElement)wait.Until(d => d.FindElement(MachineSetupTab));
             machineTab.Click();
+        }
+
+
+        public void ClickDealStatusTab()
+        {
+            ExpandAll();
+
+            WindowsElement dealTab = (WindowsElement)wait.Until(d => d.FindElement(DealStatusTab));
+            dealTab.Click();
         }
     }
 }
