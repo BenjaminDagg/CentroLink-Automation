@@ -149,6 +149,66 @@ namespace CentroLink_Automation
 
 
         [Test]
+        public void MachineSetup_EditButton_Disabled()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            Assert.False(driver.FindElement(machineSetup.EditMachineButton).Enabled);
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+
+            Assert.True(driver.FindElement(machineSetup.EditMachineButton).Enabled);
+        }
+
+
+        [Test]
+        public void MachineSetup_EditButton_Disabled_InternalMachine()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            Assert.False(driver.FindElement(machineSetup.EditMachineButton).Enabled);
+
+            machineSetup.SelectRow(0);
+
+            Assert.False(driver.FindElement(machineSetup.EditMachineButton).Enabled);
+        }
+
+
+        [Test]
+        public void MachineSetup_DuplicateButton_Disabled()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            Assert.False(driver.FindElement(machineSetup.DuplicateMachineButton).Enabled);
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+
+            Assert.True(driver.FindElement(machineSetup.DuplicateMachineButton).Enabled);
+        }
+
+
+        [Test]
+        public void MachineSetup_DuplicateButton_Disabled_InternalMachine()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            Assert.False(driver.FindElement(machineSetup.DuplicateMachineButton).Enabled);
+
+            machineSetup.SelectRow(0);
+
+            Assert.False(driver.FindElement(machineSetup.DuplicateMachineButton).Enabled);
+        }
+
+
+        [Test]
         public async Task Test()
         {
             /*set machine to Active in database

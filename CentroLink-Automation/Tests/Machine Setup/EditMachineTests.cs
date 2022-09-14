@@ -384,6 +384,39 @@ namespace CentroLink_Automation
 
 
         [Test]
+        public async Task EditMachine_Change_Assigned_Game()
+        {
+            await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickMachineSetupTab();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            string currentBank = editMachine.GetSelectedBank();
+            string currentGame = editMachine.GetSelectedGame();
+
+            //find game not already assigned
+            var games = editMachine.GetGameOptions();
+            var newGame = games.Where(game => game != currentGame).FirstOrDefault();
+
+            editMachine.SelectGame(newGame);
+            editMachine.Save();
+            editMachine.SuccessWindow.Confirm();
+
+            machineSetup.SelectRowByMachineNumber(TestData.DefaultMachineNumber);
+            machineSetup.ClickEditMachine();
+
+            string currentGameAfter = editMachine.GetSelectedGame();
+
+            Assert.AreNotEqual(currentGame, currentGameAfter);
+            Assert.AreEqual(newGame, currentGameAfter);
+
+        }
+
+
+        [Test]
         public async Task EditMachine_DuplicateGame_Error()
         {
             await LotteryRetailDatabase.UpdateMachineMultiGameEnabled(TestData.DefaultMachineNumber, true);

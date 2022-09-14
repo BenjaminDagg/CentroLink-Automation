@@ -16,11 +16,11 @@ namespace CentroLink_Automation
 {
     public class MachineSetupPage : DataGridPage
     {
-        By AddMachineButton;
-        By EditMachineButton;
-        By DuplicateMachineButton;
-        By RefreshButton;
-        By ShowRemovedCheckbox;
+        public By AddMachineButton;
+        public By EditMachineButton;
+        public By DuplicateMachineButton;
+        public By RefreshButton;
+        public By ShowRemovedCheckbox;
 
         public MachineSetupPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {

@@ -46,9 +46,11 @@ namespace CentroLink_Automation
         //Resets test machine data back to original state after a test
         public async Task ResetTestMachine()
         {
+            //delete games other than default from MACH_SETUP_GAMES
             var removeGamesQuery = "delete from MACH_SETUP_GAMES where MACH_NO = @MachNo and GAME_CODE <> @GameCode";
 
-            var query = "update MACH_SETUP " +
+            //set MACH_SETUP fields back to default
+            var restMachineQuery = "update MACH_SETUP " +
                             "set " +
                             "REMOVED_FLAG = 0, " +
                             "ACTIVE_FLAG = 1, " +
@@ -60,17 +62,37 @@ namespace CentroLink_Automation
                             "GAME_CODE = @GameCode " +
                         "where MACH_NO = @MachNo";
 
-            SqlCommand command = new SqlCommand(query, DbConnection);
+            //Assign default game to machine if not already assigned
+            var assignDefaultGameQuery = "begin " +
+                                            "if not exists " +
+                                                "(select * from MACH_SETUP_GAMES " +
+                                                "where GAME_CODE = @GameCode " +
+                                                "and MACH_NO = @MachNo) " +
+                                            "begin " +
+                                                "insert into MACH_SETUP_GAMES " +
+                                                "([MACH_NO],[LOCATION_ID],[GAME_CODE],[BANK_NO],[TYPE_ID]," +
+                                                "[GAME_RELEASE],[MATH_DLL_VERSION],[MATH_LIB_VERSION],[IsEnabled]) " +
+                                                "values" +
+                                                "(@MachNo,@LocationId,@GameCode,@BankId,'S',NULL,NULL,NULL,1) " +
+                                            "end " +
+                                         "end";
+
+            SqlCommand command = new SqlCommand(restMachineQuery, DbConnection);
             command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = TestData.DefaultMachineNumber;
             command.Parameters.Add("@LocationMachineNumber", System.Data.SqlDbType.VarChar).Value = TestData.DefaultLocationMachineNumber;
             command.Parameters.Add("@SerialNumber", System.Data.SqlDbType.VarChar).Value = TestData.DefaultSerialNumber;
             command.Parameters.Add("@IPAddress", System.Data.SqlDbType.VarChar).Value = TestData.DefaultIPAddress;
             command.Parameters.Add("@BankId", System.Data.SqlDbType.VarChar).Value = TestData.TestBankNumber;
             command.Parameters.Add("@GameCode", System.Data.SqlDbType.VarChar).Value = TestData.TestGameCode;
+            command.Parameters.Add("@LocationId", System.Data.SqlDbType.VarChar).Value = TestData.LocationId;
 
+            //execute commands
             var result = await command.ExecuteNonQueryAsync();
 
             command.CommandText = removeGamesQuery;
+            result = await command.ExecuteNonQueryAsync();
+
+            command.CommandText = assignDefaultGameQuery;
             result = await command.ExecuteNonQueryAsync();
         }
 
