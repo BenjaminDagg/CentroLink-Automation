@@ -40,7 +40,7 @@ namespace CentroLink_Automation
 
                 driver = new WindowsDriver<WindowsElement>(new Uri(DriverUrl), appiumOptions);
 
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(2);
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
             }
 

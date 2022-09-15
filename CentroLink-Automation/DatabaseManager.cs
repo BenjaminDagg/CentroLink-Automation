@@ -415,7 +415,7 @@ namespace CentroLink_Automation
 
             var dealSetupReset = "update DEAL_SETUP " +
                         "SET " +
-                        "IS_OPEN = 1 " +
+                        "IS_OPEN = 1" +
                         "WHERE DEAL_NO = @DealNo";
 
             var dealStatsReset = "update DEAL_STATS " +
@@ -450,7 +450,51 @@ namespace CentroLink_Automation
             command.Parameters.Add("@DayCount", System.Data.SqlDbType.Int).Value = subtractDays;
 
             var result = await command.ExecuteNonQueryAsync();
+        }
 
+
+        public async Task UpdateDealPlayCountPercent(double percentComplete, int dealNum)
+        {
+
+            var query = "update DSTATS " +
+                        "set " +
+                        "DSTATS.PLAY_COUNT = ((DS.TABS_PER_ROLL * ds.NUMB_ROLLS) * @PercentComplete) " +
+                        "from DEAL_STATS as DSTATS " +
+                        "inner join " +
+                        "DEAL_SETUP as DS on DSTATS.DEAL_NO = DS.DEAL_NO " +
+                        "where DSTATS.DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = dealNum;
+            command.Parameters.Add("@PercentComplete", System.Data.SqlDbType.Decimal).Value = percentComplete;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task UpdateDealPlayCount(int playCount, int dealNum)
+        {
+
+            var query = "update DEAL_STATS set PLAY_COUNT = @PlayCount  where DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = dealNum;
+            command.Parameters.Add("@PlayCount", System.Data.SqlDbType.Int).Value = playCount;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task UpdateDealEnabled(int dealNum, bool isEnabled)
+        {
+
+            var query = "update DEAL_SETUP set IS_OPEN = @IsOpen where DEAL_NO = @DealNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Int).Value = dealNum;
+            command.Parameters.Add("@IsOpen", System.Data.SqlDbType.Bit).Value = isEnabled;
+
+            var result = await command.ExecuteNonQueryAsync();
         }
 
 
