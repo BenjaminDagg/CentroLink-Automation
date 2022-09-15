@@ -509,5 +509,236 @@ namespace CentroLink_Automation
             dealStatusPage.SortGridByHeaderDescending(0);
             testDeals.ForEach(deal => Assert.True(dealStatusPage.DealFoundInList(deal.DealNumber)));
         }
+
+
+        [Test]
+        public async Task DealStatus_Sort_Ascending()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickDealStatusTab();
+
+            dealStatusPage.SelectDealStatusFilter(DealStatusPage.DealStatus.All);
+            Assert.Greater(dealStatusPage.RowCount, 0);
+
+            //deal # col
+            dealStatusPage.SortGridByHeaderAscending(0);
+            var col1 = dealStatusPage.GetValuesForColumn(0);
+            var expectedCol1 = col1.Select(x => int.Parse(x)).OrderBy(x => x).ToList();
+
+            for(int i = 0; i < col1.Count;i++)
+            {
+                Assert.AreEqual(expectedCol1[i], int.Parse(col1[i]));
+
+            }
+
+            //status col
+            dealStatusPage.SortGridByHeaderAscending(1);
+            var col2 = dealStatusPage.GetValuesForColumn(1);
+            var expectedCol2 = col2.Select(x => x).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col2.Count; i++)
+            {
+                Assert.AreEqual(expectedCol2[i], col2[i]);
+
+            }
+
+
+            //status col
+            dealStatusPage.SortGridByHeaderAscending(2);
+            var col3 = dealStatusPage.GetValuesForColumn(2);
+            var expectedCol3 = col3.Select(x => x).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col3.Count; i++)
+            {
+                Assert.AreEqual(expectedCol3[i], col3[i]);
+
+            }
+
+            //description
+            dealStatusPage.SortGridByHeaderAscending(3);
+            var colDesc = dealStatusPage.GetValuesForColumn(3);
+            var expectedColDesc = colDesc.Select(x => x).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col3.Count; i++)
+            {
+                Assert.AreEqual(expectedColDesc[i], colDesc[i]);
+
+            }
+
+            //tab amount
+            dealStatusPage.SortGridByHeaderAscending(4);
+            var col4 = dealStatusPage.GetValuesForColumn(4);
+            var expectedCol4 = col4.Select(x => double.Parse(x,System.Globalization.NumberStyles.Currency)).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col4.Count; i++)
+            {
+                Assert.AreEqual(expectedCol4[i], double.Parse(col4[i], System.Globalization.NumberStyles.Currency));
+
+            }
+
+            //tabs dispensed
+            dealStatusPage.SortGridByHeaderAscending(5);
+            var col5 = dealStatusPage.GetValuesForColumn(5);
+            var expectedCol5 = col5.Select(x => int.Parse(x)).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col5.Count; i++)
+            {
+                Assert.AreEqual(expectedCol5[i], int.Parse(col5[i]));
+
+            }
+
+            //tabs per deal
+            dealStatusPage.SortGridByHeaderAscending(6);
+            var col6 = dealStatusPage.GetValuesForColumn(6);
+            var expectedCol6 = col6.Select(x => int.Parse(x)).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < col6.Count; i++)
+            {
+                Assert.AreEqual(expectedCol6[i], int.Parse(col6[i]));
+
+            }
+
+
+            dealStatusPage.SortGridByHeaderAscending(8);
+            var colDate = dealStatusPage.GetValuesForColumn(8);
+            var expectedColDate= colDate.Select(x => DateTime.ParseExact(x,"MM/dd/yyyy", CultureInfo.InvariantCulture)).OrderBy(x => x).ToList();
+
+            for (int i = 0; i < colDate.Count; i++)
+            {
+                Assert.AreEqual(expectedColDate[i], DateTime.ParseExact(colDate[i], "MM/dd/yyyy", CultureInfo.InvariantCulture));
+
+            }
+
+        }
+
+
+        [Test]
+        public async Task DealStatus_Sort_Descending()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickDealStatusTab();
+
+            dealStatusPage.SelectDealStatusFilter(DealStatusPage.DealStatus.All);
+            Assert.Greater(dealStatusPage.RowCount, 0);
+
+            //deal # col
+            dealStatusPage.SortGridByHeaderDescending(0);
+            var col1 = dealStatusPage.GetValuesForColumn(0);
+            var expectedCol1 = col1.Select(x => int.Parse(x)).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col1.Count; i++)
+            {
+                Assert.AreEqual(expectedCol1[i], int.Parse(col1[i]));
+
+            }
+
+            //status col
+            dealStatusPage.SortGridByHeaderDescending(1);
+            var col2 = dealStatusPage.GetValuesForColumn(1);
+            var expectedCol2 = col2.Select(x => x).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col2.Count; i++)
+            {
+                Assert.AreEqual(expectedCol2[i], col2[i]);
+
+            }
+
+
+            //status col
+            dealStatusPage.SortGridByHeaderDescending(2);
+            var col3 = dealStatusPage.GetValuesForColumn(2);
+            var expectedCol3 = col3.Select(x => x).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col3.Count; i++)
+            {
+                Assert.AreEqual(expectedCol3[i], col3[i]);
+
+            }
+
+            //description
+            dealStatusPage.SortGridByHeaderDescending(3);
+            var colDesc = dealStatusPage.GetValuesForColumn(3);
+            var expectedColDesc = colDesc.Select(x => x).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col3.Count; i++)
+            {
+                Assert.AreEqual(expectedColDesc[i], colDesc[i]);
+
+            }
+
+            //tab amount
+            dealStatusPage.SortGridByHeaderDescending(4);
+            var col4 = dealStatusPage.GetValuesForColumn(4);
+            var expectedCol4 = col4.Select(x => double.Parse(x, System.Globalization.NumberStyles.Currency)).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col4.Count; i++)
+            {
+                Assert.AreEqual(expectedCol4[i], double.Parse(col4[i], System.Globalization.NumberStyles.Currency));
+
+            }
+
+            //tabs dispensed
+            dealStatusPage.SortGridByHeaderDescending(5);
+            var col5 = dealStatusPage.GetValuesForColumn(5);
+            var expectedCol5 = col5.Select(x => int.Parse(x)).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col5.Count; i++)
+            {
+                Assert.AreEqual(expectedCol5[i], int.Parse(col5[i]));
+
+            }
+
+            //tabs per deal
+            dealStatusPage.SortGridByHeaderDescending(6);
+            var col6 = dealStatusPage.GetValuesForColumn(6);
+            var expectedCol6 = col6.Select(x => int.Parse(x)).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < col6.Count; i++)
+            {
+                Assert.AreEqual(expectedCol6[i], int.Parse(col6[i]));
+
+            }
+
+
+            dealStatusPage.SortGridByHeaderDescending(8);
+            var colDate = dealStatusPage.GetValuesForColumn(8);
+            var expectedColDate = colDate.Select(x => DateTime.ParseExact(x, "MM/dd/yyyy", CultureInfo.InvariantCulture)).OrderByDescending(x => x).ToList();
+
+            for (int i = 0; i < colDate.Count; i++)
+            {
+                Assert.AreEqual(expectedColDate[i], DateTime.ParseExact(colDate[i], "MM/dd/yyyy", CultureInfo.InvariantCulture));
+
+            }
+
+        }
+
+
+        [Test]
+        public async Task DealStatus_TestRefresh()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickDealStatusTab();
+
+            dealStatusPage.SelectDealStatusFilter(DealStatusPage.DealStatus.Open);
+            dealStatusPage.SortGridByHeaderDescending(0);
+
+            var testDeals = new List<Deal>();
+            testDeals.Add(dealStatusPage.GetDealAtRowNum(0));
+            testDeals.Add(dealStatusPage.GetDealAtRowNum(1));
+            testDeals.Add(dealStatusPage.GetDealAtRowNum(2));
+
+            DealsToReset = testDeals.Select(deal => deal.DealNumber).ToList();
+
+            testDeals.ForEach(deal => Assert.True(deal.IsOpen));
+
+            dealStatusPage.SelectRows(0, 1, 2);
+            dealStatusPage.CloseDeal();
+
+            testDeals.ForEach(deal => Assert.False(dealStatusPage.DealFoundInList(deal.DealNumber)));
+
+            dealStatusPage.SelectDealStatusFilter(DealStatusPage.DealStatus.Closed);
+            dealStatusPage.SortGridByHeaderDescending(0);
+            testDeals.ForEach(deal => Assert.True(dealStatusPage.DealFoundInList(deal.DealNumber)));
+        }
     }
 }
