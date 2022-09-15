@@ -6225,6 +6225,8 @@
       "Appium.WebDriver >= 4.3.2",
       "DotNetSeleniumExtras.WaitHelpers >= 3.11.0",
       "Egm.Core >= 1.0.0",
+      "Framework.Core >= 1.0.0",
+      "Framework.Infrastructure >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 16.11.0",
       "NUnit >= 3.13.3",
       "NUnit.Console >= 3.15.2",
@@ -6268,6 +6270,12 @@
           "projectReferences": {
             "C:\\Users\\bdagg\\Documents\\EGM\\EGM\\EGMSimulator.Core\\EGMSimulator.Core.csproj": {
               "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\EGM\\EGMSimulator.Core\\EGMSimulator.Core.csproj"
+            },
+            "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Core\\Framework.Core.csproj": {
+              "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Core\\Framework.Core.csproj"
+            },
+            "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Infrastructure\\Framework.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Infrastructure\\Framework.Infrastructure.csproj"
             }
           }
         }

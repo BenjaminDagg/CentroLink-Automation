@@ -34,6 +34,12 @@
             "projectReferences": {
               "C:\\Users\\bdagg\\Documents\\EGM\\EGM\\EGMSimulator.Core\\EGMSimulator.Core.csproj": {
                 "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\EGM\\EGMSimulator.Core\\EGMSimulator.Core.csproj"
+              },
+              "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Core\\Framework.Core.csproj": {
+                "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Core\\Framework.Core.csproj"
+              },
+              "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Infrastructure\\Framework.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\bdagg\\Documents\\EGM\\Framework\\Framework.Infrastructure\\Framework.Infrastructure.csproj"
               }
             }
           }

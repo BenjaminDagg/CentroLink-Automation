@@ -3,7 +3,7 @@ using System.Threading;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-
+using EGMSimulator.Core.Connection;
 
 namespace CentroLink_Automation
 {
@@ -43,6 +43,7 @@ namespace CentroLink_Automation
         [Test]
         public async Task MachinesInUse_Status()
         {
+            
 
             await LotteryRetailDatabase.SetMachineInUse(TestData.DefaultMachineNumber);
 

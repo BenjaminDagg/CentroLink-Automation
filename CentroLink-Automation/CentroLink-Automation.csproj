@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\EGM\EGM\EGMSimulator.Core\EGMSimulator.Core.csproj" />
+    <ProjectReference Include="..\..\EGM\Framework\Framework.Core\Framework.Core.csproj" />
+    <ProjectReference Include="..\..\EGM\Framework\Framework.Infrastructure\Framework.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
