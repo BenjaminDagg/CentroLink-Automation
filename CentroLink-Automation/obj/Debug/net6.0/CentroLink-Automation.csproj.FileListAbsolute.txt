@@ -230,3 +230,4 @@ C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\n
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\CentroLink-Automation.pdb
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\CentroLink-Automation.genruntimeconfig.cache
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\ref\CentroLink-Automation.dll
+C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\CoverletSourceRootsMapping

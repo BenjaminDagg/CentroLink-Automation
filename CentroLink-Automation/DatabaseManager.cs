@@ -58,7 +58,8 @@ namespace CentroLink_Automation
                             "MACH_SERIAL_NO = @SerialNumber, " +
                             "IP_ADDRESS = @IPAddress, " +
                             "BANK_NO = @BankId, " +
-                            "GAME_CODE = @GameCode " +
+                            "GAME_CODE = @GameCode ," +
+                            "Balance = 1.00" +
                         "where MACH_NO = @MachNo";
 
             //Assign default game to machine if not already assigned
@@ -75,6 +76,7 @@ namespace CentroLink_Automation
                                                 "(@MachNo,@LocationId,@GameCode,@BankId,'S',NULL,NULL,NULL,1) " +
                                             "end " +
                                          "end";
+            
 
             SqlCommand command = new SqlCommand(restMachineQuery, DbConnection);
             command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = TestData.DefaultMachineNumber;
@@ -93,6 +95,8 @@ namespace CentroLink_Automation
 
             command.CommandText = assignDefaultGameQuery;
             result = await command.ExecuteNonQueryAsync();
+
+            await UpdateMachineLastPlay(TestData.DefaultMachineNumber);
         }
 
 
@@ -504,6 +508,85 @@ namespace CentroLink_Automation
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
             cmd.ExecuteNonQuery();
+        }
+
+
+        public async Task DeleteMachineLastPlay(string machNo)
+        {
+
+            var query = "delete from MACH_LAST_PLAY where MACH_NO = @MachNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = machNo;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task UpdateMachineBalance(string machNo,double balance)
+        {
+
+            var query = "update MACH_SETUP set balance = @Balance where MACH_NO = @MachNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = machNo;
+            command.Parameters.Add("@Balance", System.Data.SqlDbType.Decimal).Value = balance;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task UpdateMachineLastPlay(string machNo)
+        {
+
+            string currentDateString = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss.fff");
+            DateTime currentDate = DateTime.ParseExact(currentDateString, "yyyy-MM-dd HH-mm-ss.fff", CultureInfo.InvariantCulture);
+
+            var query = "BEGIN " +
+                            "IF NOT EXISTS " +
+                            "(select * from MACH_LAST_PLAY " +
+                            "where MACH_NO = @MachNo) " +
+                            "BEGIN " +
+                                "insert into MACH_LAST_PLAY " +
+                                    "([MACH_NO] " +
+                                    ",[DEAL_NO] " +
+                                    ",[ROLL_NO] " +
+                                    ",[TICKET_NO] " +
+                                    ",[BARCODE_SCAN] " +
+                                    ",[COINS_BET] " +
+                                    ",[LINES_BET] " +
+                                    ",[ERROR_NO] " +
+                                    ",[SEQUENCE_NO] " +
+                                    ",[BALANCE] " +
+                                    ",[DTIMESTAMP]) " +
+                            "values " +
+                                    "(@MachNo " +
+                                    ",@DealNo " +
+                                    ",1 " +
+                                    ",260 " +
+                                    ",'08CeUXXDD3F1EKQgN88BKMQTK72eXQ5Z' " +
+                                    ",2 " +
+                                    ",20 " +
+                                    ",119 " +
+                                    ",7 " +
+                                    ",100 " +
+                                    ",@TImeStamp) " +
+                            "END " +
+                         "END";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.VarChar).Value = machNo;
+            command.Parameters.Add("@DealNo", System.Data.SqlDbType.Decimal).Value = TestData.TestDealNumber;
+            command.Parameters.Add("@TimeStamp", System.Data.SqlDbType.DateTime).Value = currentDate;
+
+            var result = await command.ExecuteNonQueryAsync();
+        }
+
+
+        public async Task SetMachineInUse(string machNo)
+        {
+            await UpdateMachineBalance(machNo, 1.00);
+            await UpdateMachineLastPlay(machNo);
         }
 
 

@@ -31,6 +31,9 @@ namespace CentroLink_Automation
             Console.WriteLine("Is Removed: " + Removed);
             Console.WriteLine("Serial No: " + SerialNumber);
             Console.WriteLine("OS Version: " + OperatingSystemVersion);
+            Console.WriteLine("Baance: " + Balance);
+            Console.WriteLine("Promo balance: " + PromoBalance);
+            Console.WriteLine("LastPlay " + LastPlay);
         }
     }
 }
