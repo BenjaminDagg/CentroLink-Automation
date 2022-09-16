@@ -47,10 +47,10 @@ namespace CentroLink_Automation
         public virtual async Task Setup()
         {
             
-            SessionManager.Init();
-            driver = SessionManager.Driver;
+            //SessionManager.Init();
+            //driver = SessionManager.Driver;
 
-            navMenu = new NavMenu(driver);
+            //navMenu = new NavMenu(driver);
         }
 
 

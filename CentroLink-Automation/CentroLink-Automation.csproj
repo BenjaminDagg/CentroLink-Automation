@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Appium.WebDriver" Version="4.3.2" />
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit.Console" Version="3.15.2" />
@@ -18,12 +19,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\EGM\EGM\EGMSimulator.Core\EGMSimulator.Core.csproj" />
-    <ProjectReference Include="..\..\EGM\Framework\Framework.Core\Framework.Core.csproj" />
-    <ProjectReference Include="..\..\EGM\Framework\Framework.Infrastructure\Framework.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
