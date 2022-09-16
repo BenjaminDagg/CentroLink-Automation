@@ -230,6 +230,12 @@ C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\n
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\CentroLink-Automation.pdb
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\CentroLink-Automation.genruntimeconfig.cache
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\obj\Debug\net6.0\ref\CentroLink-Automation.dll
+C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Abstractions.dll
+C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Features.dll
+C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Abstractions.dll
+C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Features.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\CoverletSourceRootsMapping
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\FluentValidation.dll
@@ -257,7 +263,6 @@ C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\n
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Logging.EventSource.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
-C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\NLog.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\NPoco.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Open.ChannelExtensions.dll
@@ -270,9 +275,6 @@ C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\n
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Framework.Infrastructure.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\eBarcodeLibrary.dll
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\EGMSimulator.Core.pdb
-C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Framework.Infrastructure.pdb
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Framework.Core.pdb
 C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Framework.Domain.pdb
-C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Abstractions.dll
-C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.AspNetCore.Http.Features.dll
-C:\Users\Ben\Documents\CentroLink-Automation\CentroLink-Automation\CentroLink-Automation\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\bdagg\Documents\Centrolink Automation\CentroLink-Automation\bin\Debug\net6.0\Framework.Infrastructure.pdb

@@ -15,12 +15,16 @@ namespace CentroLink_Automation
         private TcpClient tcpClient;
         private string hostname;
         private int port;
+        public int SequenceNumber { get; set; } = 0;
 
         public TransactionPortalClient(string ipAddress, int _port)
         {
             hostname = ipAddress;
             port = _port;
             tcpClient = new TcpClient();
+
+        
+            
         }
 
 
@@ -32,13 +36,21 @@ namespace CentroLink_Automation
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
         }
 
 
         public string SendMessage(string message)
         {
+
+            SequenceNumber++;
+
+            if(tcpClient.Connected == false)
+            {
+                return string.Empty;
+            }
+
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
             NetworkStream stream = tcpClient.GetStream();
@@ -60,18 +72,21 @@ namespace CentroLink_Automation
             // Read the first batch of the TcpServer response bytes.
             Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Console.WriteLine("Received: {0}", responseData);
+            string res = responseData;
+            stream.Close();
 
-
-            return reader.ReadLine();
+            return res;
 
         }
 
 
         public void Close()
         {
-            
-            tcpClient.Client.Disconnect(true);
+            SequenceNumber = 0;
+            if(tcpClient.Connected && tcpClient.GetStream() != null)
+            {
+                tcpClient.Client.Disconnect(true);
+            }
         }
 
 
