@@ -115,10 +115,9 @@ namespace CentroLink_Automation
             //response = tpClient.SendMessage(loss);
             //Thread.Sleep(15000);
 
-            Thread.Sleep(10000);
-            var response = TpService.CashOut();
+            
+            var response = TpService.PlayGame();
             Console.WriteLine(response);
-            Thread.Sleep(10000);
         }
 
         [Test]

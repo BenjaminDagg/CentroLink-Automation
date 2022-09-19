@@ -184,9 +184,7 @@ namespace CentroLink_Automation
             int denom = DealManager.Deal.Denomination;
             int betAmount = (DealManager.Deal.LinesBet * DealManager.Deal.CoinsBet) * denom;
 
-            string tTransResponse = TransactionT();
-
-            string ticketBarcodeString = ParseBarcode(tTransResponse);
+            string ticketBarcodeString = ParseBarcode(encryptedTicketBarcode);
             var barcode = BarcodeService.DecryptBarcode(GameService.Game.BarcodeTypeId, ticketBarcodeString);
             int coinsWon = barcode.DecryptedCreditsWon * DealManager.Deal.CoinsBet;
 
@@ -274,6 +272,28 @@ namespace CentroLink_Automation
 
             var response = tpClient.Execute(ttrans);
             
+            return response;
+        }
+
+
+        public string SetOffline()
+        {
+            string transX = $"{sequenceNumber},X,{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},300";
+            var response = tpClient.Execute(transX);
+
+            sequenceNumber++;
+
+            return response;
+        }
+
+
+        public string SetOnline()
+        {
+            string transX = $"{sequenceNumber},X,{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},0";
+            var response = tpClient.Execute(transX);
+
+            sequenceNumber++;
+
             return response;
         }
 
