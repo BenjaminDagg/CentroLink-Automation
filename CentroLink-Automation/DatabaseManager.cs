@@ -59,7 +59,7 @@ namespace CentroLink_Automation
                             "IP_ADDRESS = @IPAddress, " +
                             "BANK_NO = @BankId, " +
                             "GAME_CODE = @GameCode ," +
-                            "Balance = 1.00" +
+                            "Balance = 5.00" +
                         "where MACH_NO = @MachNo";
 
             //Assign default game to machine if not already assigned
@@ -587,6 +587,27 @@ namespace CentroLink_Automation
         {
             await UpdateMachineBalance(machNo, 1.00);
             await UpdateMachineLastPlay(machNo);
+        }
+
+
+        public async Task<int> GetMachineSequenceNumber(string machNo)
+        {
+
+            var query = "select SEQUENCE_NO from MACH_LAST_PLAY where MACH_NO = @MachNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.Int).Value = machNo;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            int sequenceNum = 0;
+
+            while (reader.Read())
+            {
+                sequenceNum = reader.GetInt32(0);
+            }
+
+            return sequenceNum;
         }
 
 

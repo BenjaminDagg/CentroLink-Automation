@@ -14,5 +14,7 @@ namespace CentroLink_Automation
         public string GameTypeCode { get; set; }
         public int GameTitleId { get; set; }
         public int CasinoGameId { get; set; }
+        public int SequenceNumber { get; set; }
+        public int BarcodeTypeId { get; set; }
     }
 }

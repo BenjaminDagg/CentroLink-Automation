@@ -18,6 +18,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Transactions;
+using Microsoft.Extensions.DependencyInjection;
+using EGMSimulator.Core.Settings;
 
 namespace CentroLink_Automation
 {
@@ -29,17 +31,23 @@ namespace CentroLink_Automation
         protected string ConnectionString;
         protected DatabaseManager LotteryRetailDatabase;
         protected readonly string TestMachineId = "00001";
+        protected DealManagerService DealManager;
+        protected SqlConnection DbConnection;
+        protected ServiceProvider ServiceProvider;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             ConnectionString = $"Server = 10.0.50.186; Database = LotteryRetail; User Id=sa; Password=3m3r@ld!; MultipleActiveResultSets=True";
-            SqlConnection conn = new SqlConnection(ConnectionString);
-            conn.Open();
+            DbConnection = new SqlConnection(ConnectionString);
+            DbConnection.Open();
 
-            LotteryRetailDatabase = new DatabaseManager(conn);
+            LotteryRetailDatabase = new DatabaseManager(DbConnection);
 
-            
+            var services = new ServiceCollection();
+            services.AddSingleton<ISimulatorSettings, SimulatorSettings>();
+
+            ServiceProvider = services.BuildServiceProvider();
         }
 
 

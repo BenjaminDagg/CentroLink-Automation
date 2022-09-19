@@ -10,85 +10,73 @@ using System.IO;
 
 namespace CentroLink_Automation
 {
-    public class TransactionPortalClient
+    
+    public class TransactionPortalClient : IDisposable
     {
         private TcpClient tcpClient;
         private string hostname;
         private int port;
-        public int SequenceNumber { get; set; } = 0;
+        private NetworkStream stream;
+        private StreamWriter writer;
+        private StreamReader reader;
 
         public TransactionPortalClient(string ipAddress, int _port)
         {
             hostname = ipAddress;
             port = _port;
-            tcpClient = new TcpClient();
-
-        
-            
         }
 
 
         public void Connect()
         {
-            try
-            {
-                tcpClient.Connect(hostname, port);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
+            tcpClient = new TcpClient(hostname,port);
+            stream = tcpClient.GetStream();
+            writer = new StreamWriter(stream);
+            reader = new StreamReader(stream);
+
+            //Read connection message, advance the stream
+            string res = reader.ReadLine();
+            
         }
 
 
-        public string SendMessage(string message)
+        public string Execute(string message)
         {
-
-            SequenceNumber++;
-
-            if(tcpClient.Connected == false)
-            {
-                return string.Empty;
-            }
-
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-
-            NetworkStream stream = tcpClient.GetStream();
-            StreamWriter writer = new StreamWriter(stream);
-
-            // Send the message to the connected TcpServer.
+            
             writer.WriteLine(message);
             writer.Flush();
 
-            // Receive the TcpServer.response.
-
-            // Buffer to store the response bytes.
-            data = new Byte[256];
-
             // String to store the response ASCII representation.
-            String responseData = String.Empty;
-
-            StreamReader reader = new StreamReader(stream);
-            // Read the first batch of the TcpServer response bytes.
-            Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            string res = responseData;
-            stream.Close();
-
-            return res;
-
+            
+           string res = reader.ReadLine();
+           
+           return res;
         }
 
 
-        public void Close()
+        public void CLose()
         {
-            SequenceNumber = 0;
-            if(tcpClient.Connected && tcpClient.GetStream() != null)
-            {
-                tcpClient.Client.Disconnect(true);
-            }
+            Console.WriteLine("closing");
+            tcpClient.Close();
+           
+            reader.Dispose();
+            writer.Dispose();
+            stream.Dispose();
+        }
+
+
+        public void Dispose()
+        {
+            Console.WriteLine("disposing");
+            tcpClient.Client.Close();
+            tcpClient.Close();
+            reader.Dispose();
+            writer.Dispose();
+            stream.Dispose();
         }
 
 
     }
+
 }

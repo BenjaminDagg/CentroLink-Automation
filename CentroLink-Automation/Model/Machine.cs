@@ -19,7 +19,7 @@ namespace CentroLink_Automation
         public double Balance { get; set; }
         public double PromoBalance { get; set; }
         public DateTime LastPlay { get; set; }
-
+        public int SequenceNumber { get; set; }
 
         public void Display()
         {

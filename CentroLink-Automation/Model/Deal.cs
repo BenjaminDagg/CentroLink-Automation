@@ -25,7 +25,13 @@ namespace CentroLink_Automation
         public int ProductId { get; set; }
         public double CostPerRoll { get; set; }
         public double JackbotBase { get; set; }
-
+        public int NextTicket { get; set; }
+        public int LastTicket { get; set; }
+        public int Denomination { get; set; }
+        public int CoinsBet { get; set; }
+        public int LinesBet { get; set; }
+        public int TabsPerRoll { get; set; }
+        // select DS.DEAL_NO, DS.IS_OPEN, DS.CLOSE_RECOMMENDED, DS.DEAL_DESCR, DS.TAB_AMT, DSTATS.PLAY_COUNT, DS.TABS_PER_ROLL, DS.NUMB_ROLLS, DS.GAME_CODE, 
 
         public void Display()
         {
