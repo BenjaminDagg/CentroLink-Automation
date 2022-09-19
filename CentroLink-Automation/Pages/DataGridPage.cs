@@ -40,6 +40,8 @@ namespace CentroLink_Automation
 
         public virtual void SortGridByHeaderDescending(int headerCol)
         {
+            Thread.Sleep(1000); 
+
             WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
 
             try
@@ -47,7 +49,9 @@ namespace CentroLink_Automation
                 
                 var targetHeader = list.FindElement(By.XPath(".//Header/HeaderItem[" + (headerCol + 1) + "]"));
                 targetHeader.Click();
+                Thread.Sleep(1000);
                 targetHeader.Click();
+                Thread.Sleep(1000);
 
             }
             catch (Exception ex)
@@ -59,6 +63,8 @@ namespace CentroLink_Automation
 
         public virtual void SortGridByHeaderAscending(int headerCol)
         {
+            Thread.Sleep(1000);
+
             WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
 
             try
@@ -66,6 +72,8 @@ namespace CentroLink_Automation
 
                 var targetHeader = list.FindElement(By.XPath(".//Header/HeaderItem[" + (headerCol + 1) + "]"));
                 targetHeader.Click();
+
+                Thread.Sleep(1000);
             }
             catch (Exception ex)
             {
@@ -92,7 +100,7 @@ namespace CentroLink_Automation
         }
 
 
-        public void SelectRow(int rowNum)
+        public virtual void SelectRow(int rowNum)
         {
             WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
             var rows = list.FindElements(By.ClassName("DataGridRow"));
@@ -142,6 +150,8 @@ namespace CentroLink_Automation
 
         public virtual List<string> GetValuesForColumn(int colNum)
         {
+            Thread.Sleep(1000);
+
             WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
             var rows = list.FindElements(RowSelector);
 
@@ -149,8 +159,16 @@ namespace CentroLink_Automation
 
             foreach(var row in rows)
             {
-                var colItem = row.FindElement(By.XPath(".//Custom[" + (colNum + 1) + "]/Text"));
-                values.Add(colItem.Text);
+                try
+                {
+                    var colItem = row.FindElement(By.XPath(".//Custom[" + (colNum + 1) + "]/Text"));
+                    values.Add(colItem.Text);
+                }
+                catch(Exception ex)
+                {
+                    
+                    continue;
+                }
             }
 
             return values;

@@ -20,6 +20,8 @@ using System.Data.SqlClient;
 using System.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 using EGMSimulator.Core.Settings;
+using Framework.Core.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CentroLink_Automation
 {
@@ -34,9 +36,14 @@ namespace CentroLink_Automation
         protected DealManagerService DealManager;
         protected SqlConnection DbConnection;
         protected ServiceProvider ServiceProvider;
+        protected TransactionPortalService TpService;
+        protected DealManagerService DealService;
+        protected MachineManagerService MachineService;
+        protected GameManagerService GameService;
+        protected ILogService _logService;
 
         [OneTimeSetUp]
-        public void OneTimeSetup()
+        public async Task OneTimeSetup()
         {
             ConnectionString = $"Server = 10.0.50.186; Database = LotteryRetail; User Id=sa; Password=3m3r@ld!; MultipleActiveResultSets=True";
             DbConnection = new SqlConnection(ConnectionString);
@@ -46,8 +53,19 @@ namespace CentroLink_Automation
 
             var services = new ServiceCollection();
             services.AddSingleton<ISimulatorSettings, SimulatorSettings>();
+            
 
             ServiceProvider = services.BuildServiceProvider();
+            _logService = ServiceProvider.GetService<ILogService>();
+
+            
+
+            //Setup TP Service
+            DealService = await DealManagerService.BuildDealManagerAsync(TestData.TestDealNumber, DbConnection,_logService);
+            MachineService = await MachineManagerService.MachineManagerServiceAsync(int.Parse(TestData.DefaultMachineNumber), DbConnection);
+            GameService = await GameManagerService.BuildGameManagerServiceAsync(TestData.TestGameCode, DbConnection);
+
+            TpService = new TransactionPortalService(MachineService, DealService, LotteryRetailDatabase, GameService, _logService);
         }
 
 
@@ -55,10 +73,10 @@ namespace CentroLink_Automation
         public virtual async Task Setup()
         {
             
-            //SessionManager.Init();
-            //driver = SessionManager.Driver;
+            SessionManager.Init();
+            driver = SessionManager.Driver;
 
-            //navMenu = new NavMenu(driver);
+            navMenu = new NavMenu(driver);
         }
 
 

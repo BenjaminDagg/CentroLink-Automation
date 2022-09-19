@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CentroLink-Automation", "Ce
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DBC9418B-E5F1-4ABC-92CB-C5C4026283AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EGMSimulator.Core", "..\..\EGM\EGM\EGMSimulator.Core\EGMSimulator.Core.csproj", "{22ECCFE5-25E6-461E-91CF-61A95F624720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EGMSimulator.Core", "..\EGM\EGM\EGMSimulator.Core\EGMSimulator.Core.csproj", "{E9FF6E9A-B341-4B0B-943D-C407AA97461D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{09E3CEB5-4D9D-4E59-8E09-63CE9E7559F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E3CEB5-4D9D-4E59-8E09-63CE9E7559F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E3CEB5-4D9D-4E59-8E09-63CE9E7559F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22ECCFE5-25E6-461E-91CF-61A95F624720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22ECCFE5-25E6-461E-91CF-61A95F624720}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22ECCFE5-25E6-461E-91CF-61A95F624720}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22ECCFE5-25E6-461E-91CF-61A95F624720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9FF6E9A-B341-4B0B-943D-C407AA97461D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9FF6E9A-B341-4B0B-943D-C407AA97461D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9FF6E9A-B341-4B0B-943D-C407AA97461D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9FF6E9A-B341-4B0B-943D-C407AA97461D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

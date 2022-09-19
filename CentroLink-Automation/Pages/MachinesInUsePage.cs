@@ -49,7 +49,7 @@ namespace CentroLink_Automation
             foreach (var row in rows)
             {
                 string machineNo = row.FindElement(By.XPath("(//Custom[@ClassName='DataGridCell'])[1]")).Text;
-                Console.WriteLine(machineNo);
+
                 if (machineNo == machineNumber)
                 {
                     return true;

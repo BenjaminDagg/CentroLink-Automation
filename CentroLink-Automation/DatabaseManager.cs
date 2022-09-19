@@ -611,6 +611,64 @@ namespace CentroLink_Automation
         }
 
 
+        public async Task<string> GetMachineDescription(string machNo)
+        {
+
+            var query = "select MODEL_DESC from MACH_SETUP where MACH_NO = @MachNo";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@MachNo", System.Data.SqlDbType.Int).Value = machNo;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            string description = string.Empty;
+
+            while (reader.Read())
+            {
+                description = reader.GetString(0);
+            }
+
+            return description;
+        }
+
+
+        public async Task<Location> GetLocation(int locId)
+        {
+
+            var query = "select " +
+                            "CAS_ID, " +
+                            "Location_ID, " +
+                            "CAS_NAME, " +
+                            "RETAILER_NUMBER, " +
+                            "SETASDEFAULT, " +
+                            "FROM_TIME, " +
+                            "TO_TIME " +
+                         "from CASINO " +
+                         "where " +
+                         "LOCATION_ID = @LocationId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@LocationId", System.Data.SqlDbType.Int).Value = locId;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            Location location = new Location();
+
+            while (reader.Read())
+            {
+                location.DgeId = reader.GetString(0);
+                location.LocationId = reader.GetInt32(1);
+                location.LocationName = reader.GetString(2);
+                location.RetailerNumber = int.Parse(reader.GetString(3));
+                location.IsDefault = reader.GetBoolean(4);
+                location.AccountDayStart = reader.GetDateTime(5);
+                location.AccountDayEnd = reader.GetDateTime(6);
+            }
+
+            return location;
+        }
+
+
         /* query to set play count > 98%
          * update DSTATS set DSTATS.PLAY_COUNT = ((DS.TABS_PER_ROLL * ds.NUMB_ROLLS) * 0.99) from DEAL_STATS as DSTATS inner join DEAL_SETUP as DS on DSTATS.DEAL_NO = DS.DEAL_NO where DSTATS.DEAL_NO = 1000
          */

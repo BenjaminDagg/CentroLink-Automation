@@ -52,8 +52,20 @@ namespace CentroLink_Automation
         }
 
 
-        public void Connect()
+        public int BetAmount
         {
+            get
+            {
+                return (DealManager.Deal.LinesBet * DealManager.Deal.CoinsBet) * DealManager.Deal.Denomination;
+            }
+        }
+
+
+        public async Task Connect()
+        {
+            this.Machine = await MachineManager.RetrieveMachine();
+            DealManager.Deal = await DealManager.RetrievDeal();
+
             tpClient.Connect();
         }
 
@@ -107,11 +119,10 @@ namespace CentroLink_Automation
             int balanceCredits = (int)Machine.Balance * 100;
             int denom = DealManager.Deal.Denomination;
             int betAmount = (DealManager.Deal.LinesBet * DealManager.Deal.CoinsBet) * denom;
-
+            
             string tTransResponse = TransactionT();
             
             string ticketBarcodeString = ParseBarcode(tTransResponse);
-            
             var barcode = BarcodeService.DecryptBarcode(14, ticketBarcodeString);
 
             int creditsWon = barcode.DecryptedCreditsWon;
@@ -127,31 +138,31 @@ namespace CentroLink_Automation
         }
 
 
-        public string PlayWinningGame()
+        public string PlayWinningGame(out int winAmountCredits)
         {
-
+            
             int ticketNum = DealManager.NextTicket;
             int balanceCredits = (int)Machine.Balance * 100;
             int denom = DealManager.Deal.Denomination;
             int betAmount = (DealManager.Deal.LinesBet * DealManager.Deal.CoinsBet) * denom;
 
             string tTransResponse = TransactionT();
-
             string ticketBarcodeString = ParseBarcode(tTransResponse);
             var barcode = BarcodeService.DecryptBarcode(GameService.Game.BarcodeTypeId, ticketBarcodeString);
-            int coinsWon = barcode.DecryptedCreditsWon;
 
-            int newBalance = balanceCredits - betAmount;
-            Machine.Balance = newBalance / 100;
+            while(barcode.DecryptedCreditsWon < 1)
+            {
+                
+                DealManager.NextTicket++;
+                sequenceNumber++;
+                tTransResponse = TransactionT();
+                ticketBarcodeString = ParseBarcode(tTransResponse);
+                barcode = BarcodeService.DecryptBarcode(GameService.Game.BarcodeTypeId, ticketBarcodeString);
+            }
 
-            var wTrans = $"{SequenceNumber},W,{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},{newBalance},0,0,{coinsWon},0,{DealManager.Deal.Denomination},{DealManager.Deal.CoinsBet},{DealManager.Deal.LinesBet},{DealManager.Deal.DealNumber},0,{ticketNum},{ticketBarcodeString},0,0";
-
-            var wTransResponse = tpClient.Execute(wTrans);
-
-            DealManager.NextTicket++;
-            SequenceNumber++;
-
-            return wTransResponse;
+            winAmountCredits = barcode.DecryptedCreditsWon * DealManager.Deal.CoinsBet;
+            Console.WriteLine("Credits won: " + winAmountCredits);
+            return TransW(ticketBarcodeString);
         }
 
 
@@ -183,7 +194,7 @@ namespace CentroLink_Automation
             int balanceCredits = (int)Machine.Balance * 100;
             int denom = DealManager.Deal.Denomination;
             int betAmount = (DealManager.Deal.LinesBet * DealManager.Deal.CoinsBet) * denom;
-
+            
             string ticketBarcodeString = ParseBarcode(encryptedTicketBarcode);
             var barcode = BarcodeService.DecryptBarcode(GameService.Game.BarcodeTypeId, ticketBarcodeString);
             int coinsWon = barcode.DecryptedCreditsWon * DealManager.Deal.CoinsBet;

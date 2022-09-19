@@ -16,36 +16,20 @@ namespace CentroLink_Automation
     public class LoginTests : BaseTest
     {
         private LoginPage loginPage;
-        private TransactionPortalClient tpClient;
-        private TransactionPortalService TpService;
-        private ILogService _logService;
 
         [SetUp]
-        public async Task Setup()
+        public override async Task Setup()
         {
-            _logService = ServiceProvider.GetService<ILogService>();
+            base.Setup();
 
             await LotteryRetailDatabase.ResetTestMachine();
-
-            DealManagerService DealService = await DealManagerService.BuildDealManagerAsync(TestData.TestDealNumber, DbConnection);
-            Console.WriteLine("Got play count: " + DealService.Deal.GameCode);
-
-            MachineManagerService MachineService = await MachineManagerService.MachineManagerServiceAsync(int.Parse(TestData.DefaultMachineNumber), DbConnection);
-            Console.WriteLine("Got seqs # " + MachineService.Machine.SequenceNumber);
-
-            GameManagerService GameService = await GameManagerService.BuildGameManagerServiceAsync(TestData.TestGameCode, DbConnection);
-
-
-            TpService = new TransactionPortalService(MachineService,DealService,LotteryRetailDatabase, GameService, _logService);
-            TpService.Connect();
+            await TpService.Connect();
         }
 
         [TearDown]
         public async Task EndTest()
         {
-            //tpClient.CLose();
             TpService.Disconnect();
-            //await LotteryRetailDatabase.ResetTestMachine();
         }
 
         [Test]
@@ -115,9 +99,10 @@ namespace CentroLink_Automation
             //response = tpClient.SendMessage(loss);
             //Thread.Sleep(15000);
 
-            
-            var response = TpService.PlayGame();
+            int winAmount = 0;
+            var response = TpService.PlayWinningGame(out winAmount);
             Console.WriteLine(response);
+            Console.WriteLine("Won: " + winAmount);
         }
 
         [Test]
