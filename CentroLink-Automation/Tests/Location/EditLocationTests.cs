@@ -41,21 +41,8 @@ namespace CentroLink_Automation
             locationSetup.SelectRow(0);
             locationSetup.ClickEditLocation();
 
-            editLocation.EnterForm(
-                "loc name",
-                "addres1",
-                "address2",
-                "city",
-                "st",
-                "12345",
-                "6612200748",
-                "111",
-                "222",
-                "fax",
-                "333",
-                "sweep"
-            );
-            Thread.Sleep(10000);
+            editLocation.EnterSweepAmount("5000");
+            
         }
     }
 }

@@ -22,7 +22,7 @@ namespace CentroLink_Automation
         public By CityField;
         public By StateField;
         public By PostalCodeField;
-        public By PhoneFiled;
+        public By PhoneField;
         public By FaxField;
         public By SweepAmountField;
         public By LocationIdField;
@@ -54,15 +54,12 @@ namespace CentroLink_Automation
             LocationNameField = By.XPath("//Edit[1]");
             LocationIdField = By.XPath("//Edit[2]");
             Address1Field = By.XPath("//Edit[3]");
-            DgeIdField = By.XPath("//Edit[4]");
             Address2Field = By.XPath("//Edit[5]");
-            RetailerNumberField = By.XPath("//Edit[6]");
             CityField = By.XPath("//Edit[7]");
-            TPI = new DropdownElement(By.XPath("//ComboBox[1]"), driver);
             StateField = By.XPath("//Edit[9]");
             PostalCodeField = By.XPath("//Edit[10]");
-            CashoutTimeoutField = By.XPath("//Edit[11]");
-            PhoneFiled = By.XPath("//Edit[11]");
+            CashoutTimeoutField = By.XPath("//Edit[8]");
+            PhoneField = By.XPath("//Edit[11]");
             MaxBalanceAdjustmentField = By.XPath("//Edit[12]");
             FaxField = By.XPath("//Edit[13]");
             PayoutAuthorizationAmount = By.XPath("//Edit[14]");
@@ -133,8 +130,8 @@ namespace CentroLink_Automation
 
         public void EnterPhone(string text)
         {
-            driver.FindElement(PhoneFiled).Clear();
-            driver.FindElement(PhoneFiled).SendKeys(text);
+            driver.FindElement(PhoneField).Clear();
+            driver.FindElement(PhoneField).SendKeys(text);
         }
 
 
