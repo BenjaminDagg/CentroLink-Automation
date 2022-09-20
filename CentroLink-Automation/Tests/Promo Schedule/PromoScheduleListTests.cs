@@ -35,6 +35,13 @@ namespace CentroLink_Automation
         {
             loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
             navMenu.ClickPromoTicketSetupTab();
+
+            promoList.TurnPromoTicketsOn();
+            Thread.Sleep(3000);
+            promoList.TurnPromoTicketsOff();
+            Thread.Sleep(3000);
+            promoList.TurnPromoTicketsOn();
+            Thread.Sleep(3000);
         }
     }
 }
