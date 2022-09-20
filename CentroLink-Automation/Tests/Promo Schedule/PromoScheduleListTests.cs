@@ -129,5 +129,53 @@ namespace CentroLink_Automation
 
             Assert.False(promoList.PromoFoundInList(TestData.TestPromoEntryScheduleId));
         }
+
+
+        [Test]
+        public async Task PromoList_Headers()
+        {
+            
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            Assert.AreEqual("ID", promoList.GetHeader(0));
+            Assert.AreEqual("Description", promoList.GetHeader(1));
+            Assert.AreEqual("Start Time", promoList.GetHeader(2));
+            Assert.AreEqual("End Time", promoList.GetHeader(3));
+            Assert.AreEqual("Started", promoList.GetHeader(4));
+            Assert.AreEqual("Ended", promoList.GetHeader(5));
+        }
+
+
+        //Edit button should be disabled if an item isn't selected in the list
+        [Test]
+        public async Task PromoList_EditButton_Disabled()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            Assert.False(driver.FindElement(promoList.EditPromoButton).Enabled);
+
+            promoList.SelectRowByPromoId(TestData.TestPromoEntryScheduleId);
+
+            Assert.True(driver.FindElement(promoList.EditPromoButton).Enabled);
+        }
+
+
+        //Delete button should be disabled if an item isn't selected in the list
+        [Test]
+        public async Task PromoList_DeleteButton_Disabled()
+        {
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            Assert.False(driver.FindElement(promoList.DeletePromoButton).Enabled);
+
+            promoList.SelectRowByPromoId(TestData.TestPromoEntryScheduleId);
+
+            Assert.True(driver.FindElement(promoList.DeletePromoButton).Enabled);
+        }
     }
 }

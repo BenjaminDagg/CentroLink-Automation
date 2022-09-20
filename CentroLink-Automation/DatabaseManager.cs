@@ -741,7 +741,7 @@ namespace CentroLink_Automation
 
         public async Task<PromoEntrySchedule> ResetTestPromo()
         {
-            var startHour = DateTime.Now.ToString("yyyy-MM-dd HH:00:00.000");
+            var startHour = DateTime.Now.AddHours(-1).ToString("yyyy-MM-dd HH:00:00.000");
             var startDate = DateTime.ParseExact(startHour, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
 
             var oneHourLater = DateTime.Now.AddHours(1).ToString("yyyy-MM-dd HH:00:00.000");

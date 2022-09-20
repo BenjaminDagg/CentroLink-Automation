@@ -29,7 +29,7 @@ namespace CentroLink_Automation
 
         public void Connect()
         {
-
+            
             tcpClient = new TcpClient(hostname,port);
             stream = tcpClient.GetStream();
             writer = new StreamWriter(stream);

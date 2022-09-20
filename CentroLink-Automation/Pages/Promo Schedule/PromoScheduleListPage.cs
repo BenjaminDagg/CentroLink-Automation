@@ -18,16 +18,16 @@ namespace CentroLink_Automation
         public override By DataGrid { get => By.ClassName("DataGrid"); }
         public override By RowSelector { get => By.ClassName("DataGridRow"); }
 
-        ByAccessibilityId AddPromoButton;
-        ByAccessibilityId EditPromoButton;
-        ByAccessibilityId DeletePromoButton;
-        ByAccessibilityId RefreshButton;
-        ByAccessibilityId TogglePromoButton;
-        MultiChoiceAlertWindow TogglePromoAlert;
-        SingleChoiceAlertWindow DeletePromoAlert;
-        ByAccessibilityId DaySelectorTextbox;
-        ByAccessibilityId DayTextBoxIncreaseButton;
-        ByAccessibilityId DayTextBoxDecreaseButton;
+        public ByAccessibilityId AddPromoButton;
+        public ByAccessibilityId EditPromoButton;
+        public ByAccessibilityId DeletePromoButton;
+        public ByAccessibilityId RefreshButton;
+        public ByAccessibilityId TogglePromoButton;
+        public MultiChoiceAlertWindow TogglePromoAlert;
+        public SingleChoiceAlertWindow DeletePromoAlert;
+        public ByAccessibilityId DaySelectorTextbox;
+        public ByAccessibilityId DayTextBoxIncreaseButton;
+        public ByAccessibilityId DayTextBoxDecreaseButton;
 
         public PromoScheduleListPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {
