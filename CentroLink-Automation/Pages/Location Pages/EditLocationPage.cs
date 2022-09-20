@@ -101,6 +101,12 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetLocationName()
+        {
+            return driver.FindElement(LocationNameField).Text;
+        }
+
+
         public string GetLocationId()
         {
             return driver.FindElement(LocationIdField).Text;
@@ -111,6 +117,12 @@ namespace CentroLink_Automation
         {
             driver.FindElement(Address1Field).Clear();
             driver.FindElement(Address1Field).SendKeys(text);
+        }
+
+
+        public string GetAddress1()
+        {
+            return driver.FindElement(Address1Field).Text;
         }
 
 
@@ -126,6 +138,12 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetAddress2()
+        {
+            return driver.FindElement(Address2Field).Text;
+        }
+
+
         public string GetRetailnumber()
         {
             return driver.FindElement(RetailerNumberField).Text;
@@ -137,10 +155,22 @@ namespace CentroLink_Automation
             driver.FindElement(CityField).SendKeys(text);
         }
 
+
+        public string GetCity()
+        {
+            return driver.FindElement(CityField).Text;
+        }
+
         public void EnterState(string text)
         {
             driver.FindElement(StateField).Clear();
             driver.FindElement(StateField).SendKeys(text);
+        }
+
+
+        public string GetState()
+        {
+            return driver.FindElement(StateField).Text;
         }
 
 
@@ -151,16 +181,34 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetPostalCode()
+        {
+            return driver.FindElement(PostalCodeField).Text;
+        }
+
+
         public void EnterCashoutTimeout(string text)
         {
             driver.FindElement(CashoutTimeoutField).Clear();
             driver.FindElement(CashoutTimeoutField).SendKeys(text);
         }
 
+
+        public string GetCashoutTimeout()
+        {
+            return driver.FindElement(CashoutTimeoutField).Text;
+        }
+
         public void EnterPhone(string text)
         {
             driver.FindElement(PhoneField).Clear();
             driver.FindElement(PhoneField).SendKeys(text);
+        }
+
+
+        public string GetPhone()
+        {
+            return driver.FindElement(PhoneField).Text;
         }
 
 
@@ -171,10 +219,22 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetMaxBalanceAdjustment()
+        {
+            return driver.FindElement(MaxBalanceAdjustmentField).Text;
+        }
+
+
         public void EnterFax(string text)
         {
             driver.FindElement(FaxField).Clear();
             driver.FindElement(FaxField).SendKeys(text);
+        }
+
+
+        public string GetFax()
+        {
+            return driver.FindElement(FaxField).Text;
         }
 
 
@@ -185,6 +245,12 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetPayoutAuthorizationAmount()
+        {
+            return driver.FindElement(PayoutAuthorizationAmount).Text;
+        }
+
+
         public void EnterSweepAmount(string text)
         {
             driver.FindElement(SweepAmountField).Clear();
@@ -192,14 +258,120 @@ namespace CentroLink_Automation
         }
 
 
-        public void EnterForm(string locName,string address1, string address2, string city,
-            string state, string postalCode, string phone, string cashoutTimeout, 
+        public string GetSweepAmount()
+        {
+            return driver.FindElement(SweepAmountField).Text;
+        }
+
+
+        public void SetLocationAsDefault(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(DefaultCheckbox);
+
+            if(checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void SetJackpotLockupEnabled(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(JackpotLockupCheckbox);
+
+            if (checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void SetPrintPromoTicketEnabled(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(PrintPromoTicketsCheckbox);
+
+            if (checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void SetAllowTicketReprintEnabled(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(AllowTicketReprintCheckbox);
+
+            if (checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void SetSummarizePlayHoldEnabled(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(SummarizePlayForHoldByDenomReportCheckbox);
+
+            if (checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void SetAutoCashDropEnabled(bool enabled)
+        {
+            WindowsElement checkbox = driver.FindElement(AutoDropOnCashDoorCheckbox);
+
+            if (checkbox.Selected != enabled)
+            {
+                checkbox.Click();
+            }
+        }
+
+
+        public void ClickSave()
+        {
+            driver.FindElement(SaveButton).Click();
+        }
+
+
+        public void Save()
+        {
+            ClickSave();
+            SuccessAlert.Confirm();
+        }
+
+
+        public void ClickBackButton()
+        {
+            driver.FindElement(BackButton).Click();
+        }
+
+
+        public void CancelChanges()
+        {
+            ClickBackButton();
+            ConfirmationPrompt.Confirm();
+        }
+
+
+        public void SelectTPI(EditLocationPage.TPISetting selection)
+        {
+            int index = (int)selection;
+            TpiDropdown.SelectByIndex(index);
+        }
+
+
+        public void EnterForm(string locName,string address1, string address2, string city, 
+            EditLocationPage.TPISetting TPI, string state, string postalCode, string phone, string cashoutTimeout, 
             string maxBalanceAdjustment, string fax, string payoutAuthorizationAmount, string sweepAmount)
         {
             EnterLocationName(locName);
             EnterAddress1(address1);
             EnterAddress2(address2);
             EnterCity(city);
+            SelectTPI(TPI);
             EnterState(state);
             EnterPostalCode(postalCode);
             EnterCashoutTimeout(cashoutTimeout);

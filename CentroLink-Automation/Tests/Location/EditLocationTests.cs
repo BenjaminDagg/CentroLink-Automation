@@ -41,8 +41,18 @@ namespace CentroLink_Automation
             locationSetup.SelectRow(0);
             locationSetup.ClickEditLocation();
 
-            driver.FindElement(editLocation.DefaultCheckbox).Click();
             
+            editLocation.SelectTPI(EditLocationPage.TPISetting.DiamondGameBackOffice);
+            Thread.Sleep(3000);
+            editLocation.SelectTPI(EditLocationPage.TPISetting.SierraDesignGroup);
+            Thread.Sleep(3000);
+            editLocation.SelectTPI(EditLocationPage.TPISetting.MultiMediaGamesInc);
+            Thread.Sleep(3000);
+            editLocation.SelectTPI(EditLocationPage.TPISetting.IowaStateLottery);
+            Thread.Sleep(3000);
+            editLocation.SelectTPI(EditLocationPage.TPISetting.SlotAccountingSystem);
+            Thread.Sleep(3000);
+
         }
     }
 }
