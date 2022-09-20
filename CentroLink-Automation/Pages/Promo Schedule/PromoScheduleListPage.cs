@@ -45,5 +45,22 @@ namespace CentroLink_Automation
             DayTextBoxIncreaseButton = new ByAccessibilityId("PART_IncreaseButton");
             DayTextBoxDecreaseButton = new ByAccessibilityId("PART_DecreaseButton");
         }
+
+
+        public void EnterDayFilter(int numDays)
+        {
+            string numDaysString = numDays.ToString();
+
+            driver.FindElement(DaySelectorTextbox).Clear();
+            driver.FindElement(DaySelectorTextbox).SendKeys(numDaysString);
+        }
+
+
+        public int GetDayFilter()
+        {
+            string numDaysString = driver.FindElement(DaySelectorTextbox).Text;
+
+            return int.Parse(numDaysString);
+        }
     }
 }
