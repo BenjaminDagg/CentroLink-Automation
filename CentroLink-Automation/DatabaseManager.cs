@@ -711,6 +711,138 @@ namespace CentroLink_Automation
         }
 
 
+        public async Task<PromoEntrySchedule> GetPromoById(int promoId)
+        {
+
+            var query = "select * from PROMO_SCHEDULE where PromoScheduleId = @PromoId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@PromoId", System.Data.SqlDbType.Int).Value = promoId;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            PromoEntrySchedule promo = new PromoEntrySchedule();
+
+            while (reader.Read())
+            {
+                promo.Id = reader.GetInt32(0);
+                promo.Description = reader.GetString(1);
+                promo.StartTime = reader.GetDateTime(2);
+                promo.EndTime = reader.GetDateTime(3);
+                promo.Started = reader.GetBoolean(4);
+                promo.Ended = reader.GetBoolean(5);
+                promo.PromoTicketCount = reader.GetInt32(6);
+                promo.PromoFactorCount = reader.GetInt32(7);
+            }
+
+            return promo;
+        }
+
+
+        public async Task<PromoEntrySchedule> ResetTestPromo()
+        {
+            var startHour = DateTime.Now.ToString("yyyy-MM-dd HH:00:00.000");
+            var startDate = DateTime.ParseExact(startHour, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            var oneHourLater = DateTime.Now.AddHours(1).ToString("yyyy-MM-dd HH:00:00.000");
+            var endDate = DateTime.ParseExact(oneHourLater, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            var query = "update PROMO_SCHEDULE " +
+                        "set " +
+                        "Comments = 'Automation Test Promo', " +
+                        "PromoStart = @StartTime, " +
+                        "PromoEnd = @EndTime, " +
+                        "PromoStarted = 0, " +
+                        "PromoEnded = 0, " +
+                        "TOTAL_PROMO_AMOUNT_TICKETS = 0, " +
+                        "TOTAL_PROMO_FACTOR_TICKETS = 0 " +
+                        "where PromoScheduleID = @PromoId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@PromoId", System.Data.SqlDbType.Int).Value = TestData.TestPromoEntryScheduleId;
+            command.Parameters.Add("@StartTime", System.Data.SqlDbType.DateTime).Value = startDate;
+            command.Parameters.Add("@EndTime", System.Data.SqlDbType.DateTime).Value = endDate;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            PromoEntrySchedule promo = new PromoEntrySchedule();
+
+            while (reader.Read())
+            {
+                promo.Id = reader.GetInt32(0);
+                promo.Description = reader.GetString(1);
+                promo.StartTime = reader.GetDateTime(2);
+                promo.EndTime = reader.GetDateTime(3);
+                promo.Started = reader.GetBoolean(4);
+                promo.Ended = reader.GetBoolean(5);
+                promo.PromoTicketCount = reader.GetInt32(6);
+                promo.PromoFactorCount = reader.GetInt32(7);
+            }
+
+            return promo;
+        }
+
+
+        public async Task<PromoEntrySchedule> UpdatePromoScheduleDates(DateTime startDate, DateTime endDate, int promoId)
+        {
+           
+
+            var query = "update PROMO_SCHEDULE " +
+                        "set " +
+                        "PromoStart = @StartTime, " +
+                        "PromoEnd = @EndTime " +
+                        "where PromoScheduleID = @PromoId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@PromoId", System.Data.SqlDbType.Int).Value = promoId;
+            command.Parameters.Add("@StartTime", System.Data.SqlDbType.DateTime).Value = startDate;
+            command.Parameters.Add("@EndTime", System.Data.SqlDbType.DateTime).Value = endDate;
+
+            var reader = await command.ExecuteReaderAsync();
+
+            PromoEntrySchedule promo = new PromoEntrySchedule();
+
+            while (reader.Read())
+            {
+                promo.Id = reader.GetInt32(0);
+                promo.Description = reader.GetString(1);
+                promo.StartTime = reader.GetDateTime(2);
+                promo.EndTime = reader.GetDateTime(3);
+                promo.Started = reader.GetBoolean(4);
+                promo.Ended = reader.GetBoolean(5);
+                promo.PromoTicketCount = reader.GetInt32(6);
+                promo.PromoFactorCount = reader.GetInt32(7);
+            }
+
+            return promo;
+        }
+
+
+        public async Task UpdatePromo(int promoId, DateTime startDate, 
+            DateTime endDate, bool hasStarted, bool hasEnded)
+        {
+            
+
+            var query = "update PROMO_SCHEDULE " +
+                        "set " +
+                       
+                        "PromoStart = @StartTime, " +
+                        "PromoEnd = @EndTime, " +
+                        "PromoStarted = @IsStarted, " +
+                        "PromoEnded = @IsEnded " +
+                        "where PromoScheduleID = @PromoId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@PromoId", System.Data.SqlDbType.Int).Value = promoId;
+            command.Parameters.Add("@StartTime", System.Data.SqlDbType.DateTime).Value = startDate;
+            command.Parameters.Add("@EndTime", System.Data.SqlDbType.DateTime).Value = endDate;
+            command.Parameters.Add("@IsStarted", System.Data.SqlDbType.Bit).Value = hasStarted;
+            command.Parameters.Add("@IsEnded", System.Data.SqlDbType.Bit).Value = hasEnded;
+
+            var reader = await command.ExecuteNonQueryAsync();
+        }
+
+
         /* query to set play count > 98%
          * update DSTATS set DSTATS.PLAY_COUNT = ((DS.TABS_PER_ROLL * ds.NUMB_ROLLS) * 0.99) from DEAL_STATS as DSTATS inner join DEAL_SETUP as DS on DSTATS.DEAL_NO = DS.DEAL_NO where DSTATS.DEAL_NO = 1000
          */

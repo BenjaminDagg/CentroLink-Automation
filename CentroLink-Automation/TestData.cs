@@ -22,6 +22,7 @@ namespace CentroLink_Automation
         public const int TestBankNumber = 3;
         public const string TestGameCode = "9Z2";
 
+        /* Location Setup */
         public const int LocationId = 339577;
         public const string LocationDgeId = "MO1005";
         public const string LocationName = "American Eagle2";
@@ -39,6 +40,9 @@ namespace CentroLink_Automation
 
         /* Deal Setup */
         public const int TestDealNumber = 120381;   //Works: 120381,120449 (Barcode type 14)
+
+        /* Promo Schedule */
+        public const int TestPromoEntryScheduleId = 21;
 
         /* Transaction Portal */
         public const string TransactionPortalIpAddress = "10.0.50.186";
