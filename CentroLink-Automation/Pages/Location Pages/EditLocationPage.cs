@@ -28,7 +28,7 @@ namespace CentroLink_Automation
         public By LocationIdField;
         public By DgeIdField;
         public By RetailerNumberField;
-        public DropdownElement TPI;
+        public DropdownElement TpiDropdown { get; set; }
         public By CashoutTimeoutField;
         public By MaxBalanceAdjustmentField;
         public By PayoutAuthorizationAmount;
@@ -45,6 +45,13 @@ namespace CentroLink_Automation
 
         public MultiChoiceAlertWindow ConfirmationPrompt;
         public SingleChoiceAlertWindow SuccessAlert;
+        public enum TPISetting  { 
+            DiamondGameBackOffice = 0, 
+            SierraDesignGroup = 1, 
+            MultiMediaGamesInc = 2, 
+            IowaStateLottery = 3, 
+            SlotAccountingSystem = 4
+        }
 
         public EditLocationPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
         {
@@ -54,7 +61,9 @@ namespace CentroLink_Automation
             LocationNameField = By.XPath("//Edit[1]");
             LocationIdField = By.XPath("//Edit[2]");
             Address1Field = By.XPath("//Edit[3]");
+            DgeIdField = By.XPath("//Edit[4]");
             Address2Field = By.XPath("//Edit[5]");
+            RetailerNumberField = By.XPath("//Edit[6]");
             CityField = By.XPath("//Edit[7]");
             StateField = By.XPath("//Edit[9]");
             PostalCodeField = By.XPath("//Edit[10]");
@@ -64,14 +73,16 @@ namespace CentroLink_Automation
             FaxField = By.XPath("//Edit[13]");
             PayoutAuthorizationAmount = By.XPath("//Edit[14]");
             SweepAmountField = By.XPath("//Edit[15]");
+            
+            TpiDropdown = new DropdownElement(By.ClassName("ComboBox"),driver);
 
             //Checkboxes
-            DefaultCheckbox = By.Name("Set Location As Default");
-            JackpotLockupCheckbox = By.Name("Jackpot Lockup");
-            PrintPromoTicketsCheckbox = By.Name("Print Promo Tickets");
-            AllowTicketReprintCheckbox = By.Name("Allow Ticket Reprint");
-            SummarizePlayForHoldByDenomReportCheckbox = By.Name("Summarize Play For Hold By Denom Report");
-            AutoDropOnCashDoorCheckbox = By.Name("Auto Drop on Cash Door Open");
+            DefaultCheckbox = By.XPath("//CheckBox/Text[@Name='Set Location As Default']/parent::CheckBox");
+            JackpotLockupCheckbox = By.XPath("//CheckBox/Text[@Name='Jackpot Lockup']");
+            PrintPromoTicketsCheckbox = By.XPath("//CheckBox/Text[@Name='Print Promo Tickets']");
+            AllowTicketReprintCheckbox = By.XPath("//CheckBox/Text[@Name='Allow Ticket Reprint']");
+            SummarizePlayForHoldByDenomReportCheckbox = By.XPath("//CheckBox/Text[@Name='Summarize Play For Hold By Denom Report']");
+            AutoDropOnCashDoorCheckbox = By.XPath("//CheckBox/Text[@Name='Auto Drop on Cash Door Open']");
 
             //buttons
             SaveButton = new ByAccessibilityId("Save");
@@ -90,16 +101,34 @@ namespace CentroLink_Automation
         }
 
 
+        public string GetLocationId()
+        {
+            return driver.FindElement(LocationIdField).Text;
+        }
+
+
         public void EnterAddress1(string text)
         {
             driver.FindElement(Address1Field).Clear();
             driver.FindElement(Address1Field).SendKeys(text);
         }
 
+
+        public string GetDgeId()
+        {
+            return driver.FindElement(DgeIdField).Text;
+        }
+
         public void EnterAddress2(string text)
         {
             driver.FindElement(Address2Field).Clear();
             driver.FindElement(Address2Field).SendKeys(text);
+        }
+
+
+        public string GetRetailnumber()
+        {
+            return driver.FindElement(RetailerNumberField).Text;
         }
 
         public void EnterCity(string text)

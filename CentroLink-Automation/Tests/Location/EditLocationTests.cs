@@ -41,7 +41,7 @@ namespace CentroLink_Automation
             locationSetup.SelectRow(0);
             locationSetup.ClickEditLocation();
 
-            editLocation.EnterSweepAmount("5000");
+            driver.FindElement(editLocation.DefaultCheckbox).Click();
             
         }
     }
