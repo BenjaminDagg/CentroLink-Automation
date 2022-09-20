@@ -11,7 +11,7 @@ namespace CentroLink_Automation
         /* Machine Setup */
         public const string DefaultMachineNumber = "00001";    //default machine in the list
         public const string DefaultLocationMachineNumber = "00001";
-        public const string DefaultIPAddress = "10.0.12.30";
+        public const string DefaultIPAddress = "10.0.200.11";
         public const string DefaultSerialNumber = "00001";
         //Machine to test Add,edit,duplicate,delete etc on. Deleted after tests run
         public const string TestMachineNumber = "00002";

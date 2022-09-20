@@ -123,7 +123,7 @@ namespace CentroLink_Automation
             string tTransResponse = TransactionT();
             
             string ticketBarcodeString = ParseBarcode(tTransResponse);
-            var barcode = BarcodeService.DecryptBarcode(14, ticketBarcodeString);
+            var barcode = BarcodeService.DecryptBarcode(GameService.Game.BarcodeTypeId, ticketBarcodeString);
 
             int creditsWon = barcode.DecryptedCreditsWon;
 
@@ -161,7 +161,7 @@ namespace CentroLink_Automation
             }
 
             winAmountCredits = barcode.DecryptedCreditsWon * DealManager.Deal.CoinsBet;
-            Console.WriteLine("Credits won: " + winAmountCredits);
+
             return TransW(ticketBarcodeString);
         }
 

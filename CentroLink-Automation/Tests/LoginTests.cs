@@ -100,7 +100,7 @@ namespace CentroLink_Automation
             //Thread.Sleep(15000);
 
             int winAmount = 0;
-            var response = TpService.PlayWinningGame(out winAmount);
+            var response = TpService.PlayGame();
             Console.WriteLine(response);
             Console.WriteLine("Won: " + winAmount);
         }
