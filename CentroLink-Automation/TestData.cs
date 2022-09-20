@@ -11,7 +11,7 @@ namespace CentroLink_Automation
         /* Machine Setup */
         public const string DefaultMachineNumber = "00001";    //default machine in the list
         public const string DefaultLocationMachineNumber = "00001";
-        public const string DefaultIPAddress = "10.0.200.11";
+        public const string DefaultIPAddress = "10.0.12.30";
         public const string DefaultSerialNumber = "00001";
         //Machine to test Add,edit,duplicate,delete etc on. Deleted after tests run
         public const string TestMachineNumber = "00002";
@@ -27,6 +27,12 @@ namespace CentroLink_Automation
         public const string LocationName = "American Eagle2";
         public const int LocationRetailerNumber = 4064;
         public const int LocationNameMaxCharacters = 48;
+        public const int LocationIdMinRange = 000000;
+        public const int LocationIdMaxRange = 999999;
+        //location to test add/edit location on. Deleted after each test
+        public static int TestLocationId = 339578;
+        public const string TestLocationName = "American Eagle3";
+        public const string TestLocationDgeId = "MO1006";
 
         public const string AdminUsername = "user1";
         public const string AdminPassword = "Diamond1#";

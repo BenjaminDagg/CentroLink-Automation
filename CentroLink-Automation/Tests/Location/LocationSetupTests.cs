@@ -13,6 +13,8 @@ namespace CentroLink_Automation
 
         private LoginPage loginPage;
         private LocationSetupPage locationSetup;
+        private Location TestLocation;
+        private EditLocationPage editLocation;
 
         [SetUp]
         public override async Task Setup()
@@ -21,6 +23,9 @@ namespace CentroLink_Automation
 
             loginPage = new LoginPage(driver);
             locationSetup = new LocationSetupPage(driver);
+            editLocation = new EditLocationPage(driver);
+
+            TestLocation = await LotteryRetailDatabase.GetLocation(TestData.LocationId);
         }
 
         
@@ -28,6 +33,17 @@ namespace CentroLink_Automation
         public override async Task EndTest()
         {
             base.EndTest();
+
+            await LotteryRetailDatabase.ResetLocation(
+                TestLocation.DgeId,
+                TestLocation.LocationId,
+                TestLocation.LocationName,
+                TestLocation.RetailerNumber,
+                true,
+                TestLocation.AccountDayStart,
+                TestLocation.AccountDayEnd,
+                TestLocation.SweepAmount
+            );
         }
 
 
@@ -105,6 +121,53 @@ namespace CentroLink_Automation
             Assert.AreEqual(expectedLocation.IsDefault, location.IsDefault);
             Assert.AreEqual(expectedLocation.AccountDayStart, location.AccountDayStart);
             Assert.AreEqual(expectedLocation.AccountDayEnd, location.AccountDayEnd);
+        }
+
+
+        [Test]
+        public async Task LocationSetup_Refresh()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickLocationSetupTab();
+
+            var locationBefore = locationSetup.GetLocation();
+
+            //update location in database
+            await LotteryRetailDatabase.ResetLocation(
+                TestLocation.DgeId,
+                TestLocation.LocationId,
+                "American Eagle3",
+                TestLocation.RetailerNumber,
+                true,
+                TestLocation.AccountDayStart,
+                TestLocation.AccountDayEnd,
+                TestLocation.SweepAmount
+            );
+
+            locationSetup.Refresh();
+
+            var locationAfter = locationSetup.GetLocation();
+
+            Assert.AreEqual("American Eagle3",locationAfter.LocationName);
+            Assert.AreNotEqual(locationBefore.LocationName,locationAfter.LocationName);
+        }
+
+
+        [Test]
+        public async Task LocationSetup_Enable_Add_Button()
+        {
+            
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickLocationSetupTab();
+
+            locationSetup.SelectRowByLocationId(TestData.LocationId);
+            locationSetup.ClickEditLocation();
+
+            editLocation.SetLocationAsDefault(false);
+            editLocation.Save();
+
+            Assert.True(driver.FindElement(locationSetup.AddLocationButton).Enabled);
+           
         }
 
     }

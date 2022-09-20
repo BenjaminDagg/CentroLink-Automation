@@ -647,6 +647,10 @@ namespace CentroLink_Automation
                          "where " +
                          "LOCATION_ID = @LocationId";
 
+            var setDefaultQuery = "update CASINO set SETASDEFAULT = case when LOCATION_ID = @LocationId then 1 else 0 end";
+
+            var deleteTestLocationQuery = "delete from CASINO where Location_ID = @TestLocationId";
+
             SqlCommand command = new SqlCommand(query, DbConnection);
             command.Parameters.Add("@DGEId", System.Data.SqlDbType.VarChar).Value = DgeId;
             command.Parameters.Add("@LocationId", System.Data.SqlDbType.Int).Value = locationId;
@@ -656,8 +660,15 @@ namespace CentroLink_Automation
             command.Parameters.Add("@StartTime", System.Data.SqlDbType.DateTime).Value = AccountDayStart;
             command.Parameters.Add("@EndTime", System.Data.SqlDbType.DateTime).Value = AccountDayEnd;
             command.Parameters.Add("@SweepAccount", System.Data.SqlDbType.VarChar).Value = sweepAccount;
+            command.Parameters.Add("@TestLocationId", System.Data.SqlDbType.Int).Value = TestData.TestLocationId;
 
             var reader = await command.ExecuteNonQueryAsync();
+
+            command.CommandText = setDefaultQuery;
+            reader = await command.ExecuteNonQueryAsync();
+
+            command.CommandText = deleteTestLocationQuery;
+            reader = await command.ExecuteNonQueryAsync();
         }
 
 

@@ -14,6 +14,7 @@ namespace CentroLink_Automation
         private LocationSetupPage locationSetup;
         private EditLocationPage editLocation;
         private Location TestLocation;
+        private AddLocationPage addLocation;
 
         [SetUp]
         public override async Task Setup()
@@ -25,6 +26,7 @@ namespace CentroLink_Automation
             loginPage = new LoginPage(driver);
             locationSetup = new LocationSetupPage(driver);
             editLocation = new EditLocationPage(driver);
+            addLocation = new AddLocationPage(driver);
         }
 
 
@@ -412,6 +414,63 @@ namespace CentroLink_Automation
             editLocation.ClickSave();
 
             Assert.True(editLocation.ErrorIsDisplayed(editLocation.StateField));
+        }
+
+
+        [Test]
+        public void EditLocation_Multiple_Default()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickLocationSetupTab();
+
+            locationSetup.SelectRowByLocationId(TestData.LocationId);
+            locationSetup.ClickEditLocation();
+
+            editLocation.SetLocationAsDefault(false);
+            editLocation.Save();
+
+            locationSetup.ClickAddLocation();
+
+            addLocation.EnterForm(
+                TestData.TestLocationName,
+                "Address1",
+                "Address2",
+                "City",
+                EditLocationPage.TPISetting.DiamondGameBackOffice,
+                "CA",
+                "12345",
+                "6612200748",
+                "0",
+                "1000",
+                "",
+                "10000",
+                "",
+                TestData.TestLocationId.ToString(),
+                TestData.TestLocationDgeId,
+                "4065"
+            );
+
+            addLocation.SetLocationAsDefault(false);
+
+            addLocation.Save();
+
+            locationSetup.SelectRow(0);
+            locationSetup.ClickEditLocation();
+
+            editLocation.SetLocationAsDefault(true);
+            editLocation.ClickSave();
+
+            Assert.True(editLocation.SuccessAlert.IsOpen);
+            editLocation.SuccessAlert.Confirm();
+
+
+            locationSetup.SelectRow(1);
+            locationSetup.ClickEditLocation();
+
+            editLocation.SetLocationAsDefault(true);
+            editLocation.ClickSave();
+
+            Assert.False(editLocation.SuccessAlert.IsOpen);
         }
     }
 }

@@ -38,6 +38,17 @@ namespace CentroLink_Automation
         }
 
 
+        public void ClickAddLocation()
+        {
+            WindowsElement addBtn = driver.FindElement(AddLocationButton);
+
+            if (addBtn.Enabled)
+            {
+                addBtn.Click();
+            }
+        }
+
+
         public void Refresh()
         {
             driver.FindElement(RefreshButton).Click();
@@ -73,6 +84,78 @@ namespace CentroLink_Automation
             }
 
             return location;
+        }
+
+
+        public Location GetLocation(int locationId)
+        {
+            WindowsElement machineList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = machineList.FindElements(RowSelector);
+
+            foreach(var row in rows)
+            {
+                
+                int id = int.Parse(row.FindElement(By.XPath(".//Custom[2]/Text")).Text);
+
+                if(id == locationId)
+                {
+                    try
+                    {
+                        Location location = new Location();
+                        location.DgeId = row.FindElement(By.XPath(".//Custom[1]/Text")).Text;
+                        location.LocationId = int.Parse(row.FindElement(By.XPath(".//Custom[2]/Text")).Text);
+                        location.LocationName = row.FindElement(By.XPath(".//Custom[3]/Text")).Text;
+                        location.RetailerNumber = int.Parse(row.FindElement(By.XPath(".//Custom[4]/Text")).Text);
+
+                        string defaultText = row.FindElement(By.XPath(".//Custom[5]/Text")).Text;
+                        location.IsDefault = defaultText == "True";
+
+                        string startDate = row.FindElement(By.XPath(".//Custom[6]/Text")).Text;
+                        location.AccountDayStart = DateTime.ParseExact(startDate, "HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        string endDate = row.FindElement(By.XPath(".//Custom[7]/Text")).Text;
+                        location.AccountDayEnd = DateTime.ParseExact(endDate, "HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        return location;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+                
+            }
+
+            return null;
+        }
+
+
+        public void SelectRowByLocationId(int locationId)
+        {
+            WindowsElement machineList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = machineList.FindElements(RowSelector);
+
+            foreach (var row in rows)
+            {
+
+                int id = int.Parse(row.FindElement(By.XPath(".//Custom[2]/Text")).Text);
+
+                if (id == locationId)
+                {
+                    try
+                    {
+                        var col = row.FindElement(By.XPath("//Custom[1]/Text"));
+                        col.Click();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+            }
+
+            
         }
 
 

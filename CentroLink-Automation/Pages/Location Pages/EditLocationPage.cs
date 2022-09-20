@@ -45,12 +45,14 @@ namespace CentroLink_Automation
 
         public MultiChoiceAlertWindow ConfirmationPrompt;
         public SingleChoiceAlertWindow SuccessAlert;
+        public SingleChoiceAlertWindow DuplicateErrorAlert;
         public enum TPISetting  { 
             DiamondGameBackOffice = 0, 
             SierraDesignGroup = 1, 
             MultiMediaGamesInc = 2, 
             IowaStateLottery = 3, 
-            SlotAccountingSystem = 4
+            SlotAccountingSystem = 4,
+            None = 5
         }
 
         public EditLocationPage(WindowsDriver<WindowsElement> _driver) : base(_driver)
@@ -91,6 +93,7 @@ namespace CentroLink_Automation
             //alerts
             SuccessAlert = new SingleChoiceAlertWindow(driver, By.Name("Success"));
             ConfirmationPrompt = new MultiChoiceAlertWindow(driver, By.Name("Confirm Action"));
+            DuplicateErrorAlert = new SingleChoiceAlertWindow(driver, By.Name("Error"));
         }
 
 
@@ -358,12 +361,17 @@ namespace CentroLink_Automation
 
         public void SelectTPI(EditLocationPage.TPISetting selection)
         {
-            int index = (int)selection;
-            TpiDropdown.SelectByIndex(index);
+
+            if(selection != EditLocationPage.TPISetting.None)
+            {
+                int index = (int)selection;
+                TpiDropdown.SelectByIndex(index);
+            }
+            
         }
 
 
-        public void EnterForm(string locName,string address1, string address2, string city, 
+        public virtual void EnterForm(string locName,string address1, string address2, string city, 
             EditLocationPage.TPISetting TPI, string state, string postalCode, string phone, string cashoutTimeout, 
             string maxBalanceAdjustment, string fax, string payoutAuthorizationAmount, string sweepAmount)
         {
