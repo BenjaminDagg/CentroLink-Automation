@@ -380,6 +380,22 @@ namespace CentroLink_Automation
             EnterFax(fax);
             EnterPayoutAuthorizationAmount(payoutAuthorizationAmount);
             EnterSweepAmount(sweepAmount);
-        }   
+        }
+        
+
+        //If element is read only it throws an error when trying to type in it with SendKeys
+        public bool IsReadOnly(By element)
+        {
+            try
+            {
+                driver.FindElement(element).SendKeys("test");
+                return false;
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+        }
+
     }
 }

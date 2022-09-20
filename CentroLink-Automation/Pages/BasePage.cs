@@ -49,5 +49,29 @@ namespace CentroLink_Automation
 
             return false;
         }
+
+
+        public bool ErrorIsDisplayed(By elementSelector)
+        {
+            try
+            {
+                WindowsElement element = (WindowsElement)wait.Until(d => d.FindElement(elementSelector));
+                string helpText = element.GetAttribute("HelpText");
+
+                if (string.IsNullOrEmpty(helpText))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

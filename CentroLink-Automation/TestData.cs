@@ -23,6 +23,10 @@ namespace CentroLink_Automation
         public const string TestGameCode = "9Z2";
 
         public const int LocationId = 339577;
+        public const string LocationDgeId = "MO1005";
+        public const string LocationName = "American Eagle2";
+        public const int LocationRetailerNumber = 4064;
+        public const int LocationNameMaxCharacters = 48;
 
         public const string AdminUsername = "user1";
         public const string AdminPassword = "Diamond1#";

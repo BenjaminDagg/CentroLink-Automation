@@ -632,6 +632,35 @@ namespace CentroLink_Automation
         }
 
 
+        public async Task ResetLocation(string DgeId, int locationId,string LocationName, int RetailerNumber,
+            bool isDefault,DateTime AccountDayStart, DateTime AccountDayEnd, string sweepAccount)
+        {
+            var query = "update CASINO SET " +
+                            "CAS_ID = @DGEId, " +
+                            "Location_ID = @LocationId, " +
+                            "CAS_NAME = @LocationName, " +
+                            "RETAILER_NUMBER = @RetailerNum, " +
+                            "SETASDEFAULT = @IsDefault, " +
+                            "FROM_TIME = @StartTime, " +
+                            "TO_TIME = @EndTime, " +
+                            "SWEEP_ACCT = @SweepAccount " +
+                         "where " +
+                         "LOCATION_ID = @LocationId";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@DGEId", System.Data.SqlDbType.VarChar).Value = DgeId;
+            command.Parameters.Add("@LocationId", System.Data.SqlDbType.Int).Value = locationId;
+            command.Parameters.Add("@LocationName", System.Data.SqlDbType.VarChar).Value = LocationName;
+            command.Parameters.Add("@RetailerNum", System.Data.SqlDbType.Int).Value = RetailerNumber;
+            command.Parameters.Add("@IsDefault", System.Data.SqlDbType.Bit).Value = isDefault;
+            command.Parameters.Add("@StartTime", System.Data.SqlDbType.DateTime).Value = AccountDayStart;
+            command.Parameters.Add("@EndTime", System.Data.SqlDbType.DateTime).Value = AccountDayEnd;
+            command.Parameters.Add("@SweepAccount", System.Data.SqlDbType.VarChar).Value = sweepAccount;
+
+            var reader = await command.ExecuteNonQueryAsync();
+        }
+
+
         public async Task<Location> GetLocation(int locId)
         {
 
@@ -642,7 +671,8 @@ namespace CentroLink_Automation
                             "RETAILER_NUMBER, " +
                             "SETASDEFAULT, " +
                             "FROM_TIME, " +
-                            "TO_TIME " +
+                            "TO_TIME," +
+                            "SWEEP_ACCT " +
                          "from CASINO " +
                          "where " +
                          "LOCATION_ID = @LocationId";
@@ -663,6 +693,7 @@ namespace CentroLink_Automation
                 location.IsDefault = reader.GetBoolean(4);
                 location.AccountDayStart = reader.GetDateTime(5);
                 location.AccountDayEnd = reader.GetDateTime(6);
+                location.SweepAmount = reader.GetString(7);
             }
 
             return location;

@@ -22,7 +22,7 @@ namespace CentroLink_Automation
         public int PostalCode { get; set; }
         public string Phone { get; set; }
         public string? Fax { get; set; }
-        public int? SweepAmount { get; set; }
+        public string? SweepAmount { get; set; }
         public bool JackpotLockup { get; set; }
         public bool PrintPromoTickets { get; set; }
         public string TPI { get; set; }
