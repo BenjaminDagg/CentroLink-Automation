@@ -10,7 +10,8 @@ namespace CentroLink_Automation
     public class PromoScheduleListTests : BaseTest
     {
 
-        public LoginPage loginPage;
+        private LoginPage loginPage;
+        private PromoScheduleListPage promoList;
 
         [SetUp]
         public override async Task Setup()
@@ -18,6 +19,7 @@ namespace CentroLink_Automation
             base.Setup();
 
             loginPage = new LoginPage(driver);
+            promoList = new PromoScheduleListPage(driver);
         }
 
 
@@ -25,6 +27,14 @@ namespace CentroLink_Automation
         public override async Task EndTest()
         {
             base.EndTest();
+        }
+
+
+        [Test]
+        public void GoTo_Page()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
         }
     }
 }

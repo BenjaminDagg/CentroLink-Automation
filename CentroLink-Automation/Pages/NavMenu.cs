@@ -40,6 +40,7 @@ namespace CentroLink_Automation
         public By DealStatusTab;
         public By MachinesInUseTab;
         public By LocationSetupTab;
+        public By PromoTicketSetupTab;
         WebDriverWait wait;
         private int WaitTimeoutSec = 5;
         
@@ -56,6 +57,7 @@ namespace CentroLink_Automation
             DealStatusTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[4]");
             MachinesInUseTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[5]");
             LocationSetupTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[6]");
+            PromoTicketSetupTab = By.XPath("(//Window[@ClassName='Window'][@Name='CentroLink']/Custom[@ClassName='MainContentView']/Button[@ClassName='Button'])[7]");
         }
 
 
@@ -126,6 +128,15 @@ namespace CentroLink_Automation
 
             WindowsElement locationTab = (WindowsElement)wait.Until(d => d.FindElement(LocationSetupTab));
             locationTab.Click();
+        }
+
+
+        public void ClickPromoTicketSetupTab()
+        {
+            ExpandAll();
+
+            WindowsElement promoTab = (WindowsElement)wait.Until(d => d.FindElement(PromoTicketSetupTab));
+            promoTab.Click();
         }
     }
 }
