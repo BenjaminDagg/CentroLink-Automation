@@ -43,6 +43,7 @@ namespace CentroLink_Automation
 
         public void EnterDescription(string text)
         {
+            driver.FindElement(Description).Clear();
             driver.FindElement(Description).SendKeys(text);
         }
 
@@ -55,7 +56,10 @@ namespace CentroLink_Automation
 
         public void EnterPromoStartDate(string text)
         {
+            driver.FindElement(StartDateField).SendKeys(Keys.Control + "a");
+            driver.FindElement(StartDateField).SendKeys(Keys.Backspace);
             driver.FindElement(StartDateField).SendKeys(text);
+            driver.FindElement(StartDateField).SendKeys(Keys.Enter);
         }
 
 
@@ -67,7 +71,10 @@ namespace CentroLink_Automation
 
         public void EnterPromoEndDate(string text)
         {
+            driver.FindElement(EndDateField).SendKeys(Keys.Control + "a");
+            driver.FindElement(EndDateField).SendKeys(Keys.Backspace);
             driver.FindElement(EndDateField).SendKeys(text);
+            driver.FindElement(StartDateField).SendKeys(Keys.Enter);
         }
 
 
