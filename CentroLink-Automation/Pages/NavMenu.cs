@@ -142,7 +142,7 @@ namespace CentroLink_Automation
         }
 
 
-        public void ClickDealSetupTab()
+        public void ClickBankSetupTab()
         {
             ExpandAll();
 

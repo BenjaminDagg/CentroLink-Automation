@@ -11,12 +11,17 @@ namespace CentroLink_Automation
     public class BankSetupListTests : BaseTest
     {
 
+        private LoginPage loginPage;
+        private BankSetupListPage bankList;
 
 
         [SetUp]
-        public async Task Setup()
+        public override async Task Setup()
         {
+            base.Setup();
 
+            loginPage = new LoginPage(driver);
+            bankList = new BankSetupListPage(driver);
         }
 
 
@@ -25,13 +30,16 @@ namespace CentroLink_Automation
         {
             base.EndTest();
 
-            await LotteryRetailDatabase.ResetTestDeal();
-            await LotteryRetailDatabase.ExecuteRecommendDealForClosePrecedure();
+        }
 
-            foreach (var deal in DealsToReset)
-            {
-                await LotteryRetailDatabase.UpdateDealEnabled(deal, true);
-            }
+
+        [Test]
+        public void BankSetup_GoTo_Page()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickBankSetupTab();
+
+            bankList.SelectRowByBankId(3000);
         }
     }
 }

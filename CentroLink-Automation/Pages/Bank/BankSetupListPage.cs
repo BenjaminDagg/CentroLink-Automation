@@ -67,5 +67,27 @@ namespace CentroLink_Automation
         {
             driver.FindElement(RefreshButton).Click();
         }
+
+
+        public PromoEntrySchedule SelectRowByBankId(int bankId)
+        {
+            WindowsElement bankList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = bankList.FindElements(RowSelector);
+
+            foreach (var row in rows)
+            {
+
+                int id = int.Parse(row.FindElement(By.XPath(".//Custom[1]/Text")).Text);
+
+                if (id == bankId)
+                {
+                    var col = row.FindElement(By.XPath(".//Custom[1]/Text"));
+                    col.Click();
+                }
+
+            }
+
+            return null;
+        }
     }
 }
