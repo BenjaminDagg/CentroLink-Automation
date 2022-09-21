@@ -44,5 +44,6 @@ namespace CentroLink_Automation
                 return driver.FindElement(PromoEndedCheckbox).Selected;
             }
         }
+
     }
 }

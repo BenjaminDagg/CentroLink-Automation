@@ -24,7 +24,8 @@ namespace CentroLink_Automation
         public ByAccessibilityId RefreshButton;
         public ByAccessibilityId TogglePromoButton;
         public MultiChoiceAlertWindow TogglePromoAlert;
-        public SingleChoiceAlertWindow DeletePromoAlert;
+        public MultiChoiceAlertWindow DeletePromoAlert;
+        public SingleChoiceAlertWindow DeleteFinishedPromoAlert;
         public ByAccessibilityId DaySelectorTextbox;
         public ByAccessibilityId DayTextBoxIncreaseButton;
         public ByAccessibilityId DayTextBoxDecreaseButton;
@@ -40,7 +41,8 @@ namespace CentroLink_Automation
             RefreshButton = new ByAccessibilityId("RefreshList");
             TogglePromoButton = new ByAccessibilityId("TogglePromoTicket");
             TogglePromoAlert = new MultiChoiceAlertWindow(driver, By.Name("Please Confirm"));
-            DeletePromoAlert = new SingleChoiceAlertWindow(driver, By.Name("Message"));
+            DeletePromoAlert = new MultiChoiceAlertWindow(driver, By.XPath("//Window[contains(@Name,'Confirm')] | //Window[@Name='Message']"));
+            DeleteFinishedPromoAlert = new SingleChoiceAlertWindow(driver, By.XPath("//Window[@Name='Message']"));
             DaySelectorTextbox = new ByAccessibilityId("PART_TextBox");
             DayTextBoxIncreaseButton = new ByAccessibilityId("PART_IncreaseButton");
             DayTextBoxDecreaseButton = new ByAccessibilityId("PART_DecreaseButton");
@@ -76,32 +78,65 @@ namespace CentroLink_Automation
                 
                 if (id == promoId)
                 {
-                    try
-                    {
-                        PromoEntrySchedule promo = new PromoEntrySchedule();
-                        promo.Id = id;
-                        promo.Description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
 
-                        string startDate = row.FindElement(By.XPath(".//Custom[3]/Text")).Text;
-                        promo.StartTime = DateTime.ParseExact(startDate, "M/dd/yyyy H:mm:ss tt", CultureInfo.InvariantCulture);
+                    PromoEntrySchedule promo = new PromoEntrySchedule();
+                    promo.Id = id;
+                    promo.Description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
 
-                        string EndDate = row.FindElement(By.XPath(".//Custom[4]/Text")).Text;
-                        promo.EndTime = DateTime.ParseExact(EndDate, "M/dd/yyyy H:mm:ss tt", CultureInfo.InvariantCulture);
+                    string startDate = row.FindElement(By.XPath(".//Custom[3]/Text")).Text;
+                    promo.StartTime = DateTime.ParseExact(startDate, "M/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 
-                        WindowsElement startedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[5]/CheckBox"));
-                        promo.Started = startedCheckbox.Selected;
+                    string EndDate = row.FindElement(By.XPath(".//Custom[4]/Text")).Text;
+                    promo.EndTime = DateTime.ParseExact(EndDate, "M/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 
-                        WindowsElement endedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[6]/CheckBox"));
-                        promo.Ended = endedCheckbox.Selected;
+                    WindowsElement startedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[5]/CheckBox"));
+                    promo.Started = startedCheckbox.Selected;
 
-                        return promo;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    WindowsElement endedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[6]/CheckBox"));
+                    promo.Ended = endedCheckbox.Selected;
+
+                    return promo;
                 }
                 
+            }
+
+            return null;
+        }
+
+
+        public PromoEntrySchedule GetPromoSchedule(string promoDescription)
+        {
+            WindowsElement promoList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = promoList.FindElements(RowSelector);
+
+            foreach (var row in rows)
+            {
+
+                string description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
+
+                if (description == promoDescription)
+                {
+
+                    PromoEntrySchedule promo = new PromoEntrySchedule();
+
+                    promo.Id = int.Parse(row.FindElement(By.XPath(".//Custom[1]/Text")).Text);
+                    promo.Description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
+
+                    string startDate = row.FindElement(By.XPath(".//Custom[3]/Text")).Text;
+                    promo.StartTime = DateTime.ParseExact(startDate, "M/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+
+                    string EndDate = row.FindElement(By.XPath(".//Custom[4]/Text")).Text;
+                    promo.EndTime = DateTime.ParseExact(EndDate, "M/dd/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+
+                    WindowsElement startedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[5]/CheckBox"));
+                    promo.Started = startedCheckbox.Selected;
+
+                    WindowsElement endedCheckbox = (WindowsElement)row.FindElement(By.XPath(".//Custom[6]/CheckBox"));
+                    promo.Ended = endedCheckbox.Selected;
+
+                    return promo;
+                }
+
             }
 
             return null;
@@ -254,6 +289,13 @@ namespace CentroLink_Automation
                 driver.FindElement(TogglePromoButton).Click();
                 TogglePromoAlert.Confirm();
             }
+        }
+
+
+        public void DeleteSelectedPromo()
+        {
+            ClickDeletePromo();
+            DeletePromoAlert.Confirm();
         }
     }
 }

@@ -73,5 +73,11 @@ namespace CentroLink_Automation
                 return false;
             }
         }
+
+
+        public virtual bool IsReadOnly(By element)
+        {
+            return driver.FindElement(element).Enabled == false;
+        }
     }
 }

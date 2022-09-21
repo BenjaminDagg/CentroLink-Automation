@@ -16,5 +16,13 @@ namespace CentroLink_Automation
         public bool Ended { get; set; }
         public int PromoTicketCount { get; set; }
         public int PromoFactorCount { get; set; }
+
+
+        public static bool AreEqual(PromoEntrySchedule a, PromoEntrySchedule b)
+        {
+            return a.Description == b.Description &&
+                    a.StartTime == b.StartTime &&
+                    a.EndTime == b.EndTime;
+        }
     }
 }

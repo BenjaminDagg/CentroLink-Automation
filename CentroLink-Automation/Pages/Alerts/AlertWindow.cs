@@ -16,7 +16,7 @@ namespace CentroLink_Automation
         protected int WAIT_TIMEOUT_SEC = 5;
         protected virtual By Window { get; set; }
         protected virtual By CloseButton { get; set; }
-
+       
         public AlertWindow(WindowsDriver<WindowsElement> _driver, By windowSelector)
         {
             this.driver = _driver;
@@ -47,6 +47,16 @@ namespace CentroLink_Automation
                 {
                     return false;
                 }
+            }
+        }
+
+
+        public virtual string AlertText
+        {
+            get
+            {
+                
+                return driver.FindElement(Window).FindElement(By.XPath(".//Text[2]")).Text;
             }
         }
 
