@@ -843,6 +843,19 @@ namespace CentroLink_Automation
         }
 
 
+        public async Task DeletePromo(string description)
+        {
+
+
+            var query = "delete from PROMO_SCHEDULE where Comments = @Description";
+
+            SqlCommand command = new SqlCommand(query, DbConnection);
+            command.Parameters.Add("@Description", System.Data.SqlDbType.VarChar).Value = description;
+
+            var reader = await command.ExecuteNonQueryAsync();
+        }
+
+
         /* query to set play count > 98%
          * update DSTATS set DSTATS.PLAY_COUNT = ((DS.TABS_PER_ROLL * ds.NUMB_ROLLS) * 0.99) from DEAL_STATS as DSTATS inner join DEAL_SETUP as DS on DSTATS.DEAL_NO = DS.DEAL_NO where DSTATS.DEAL_NO = 1000
          */

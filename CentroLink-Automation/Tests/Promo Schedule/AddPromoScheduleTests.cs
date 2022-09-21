@@ -13,22 +13,8 @@ namespace CentroLink_Automation
         private LoginPage loginPage;
         private PromoScheduleListPage promoList;
         private AddPromoSchedulePage addPromo;
+        private PromoEntrySchedule PromoToDelete;
 
-        private string ParseDateString(DateTime date)
-        {
-            var dateString = date.ToString("MM/dd/yyyy hh:00 tt");
-            Console.WriteLine("got string: " + dateString);
-            if(dateString.IndexOf("AM") != -1)
-            {
-                dateString = dateString.Replace("AM", "am");
-            }
-            else
-            {
-                dateString = dateString.Replace("PM", "pm");
-            }
-
-            return dateString;
-        }
 
         [SetUp]
         public override async Task Setup()
@@ -38,6 +24,8 @@ namespace CentroLink_Automation
             loginPage = new LoginPage(driver);
             promoList = new PromoScheduleListPage(driver);
             addPromo = new AddPromoSchedulePage(driver);
+
+            PromoToDelete = new PromoEntrySchedule();
         }
 
 
@@ -47,6 +35,30 @@ namespace CentroLink_Automation
             base.EndTest();
 
             await LotteryRetailDatabase.ResetTestPromo();
+
+            if(!string.IsNullOrEmpty(PromoToDelete.Description))
+            {
+                await LotteryRetailDatabase.DeletePromo(PromoToDelete.Description);
+            }
+
+            PromoToDelete = null;
+        }
+
+
+        private string ParseDateString(DateTime date)
+        {
+            var dateString = date.ToString("MM/dd/yyyy hh:00 tt");
+            Console.WriteLine("got string: " + dateString);
+            if (dateString.IndexOf("AM") != -1)
+            {
+                dateString = dateString.Replace("AM", "am");
+            }
+            else
+            {
+                dateString = dateString.Replace("PM", "pm");
+            }
+
+            return dateString;
         }
 
 
@@ -191,6 +203,52 @@ namespace CentroLink_Automation
             addPromo.ClickSave();
 
             Assert.False(addPromo.SuccessAlert.IsOpen);
+        }
+
+
+        [Test]
+        public void AddPromo_Success()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            promoList.ClickAddPromo();
+
+            string description = "Test Promo";
+            string startDate = ParseDateString(DateTime.Now.AddHours(1));
+            string endDate = ParseDateString(DateTime.Now.AddHours(2));
+
+            PromoToDelete = new PromoEntrySchedule{ Description = description};
+
+            addPromo.EnterDescription(description);
+            addPromo.EnterPromoStartDate(startDate);
+            addPromo.EnterPromoEndDate(endDate);
+
+            addPromo.Save();
+
+            Assert.True(promoList.PromoFoundInList(description));
+        }
+
+
+        [Test]
+        public void AddPromo_Cancel()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            promoList.ClickAddPromo();
+
+            string description = "Test Promo";
+            string startDate = ParseDateString(DateTime.Now.AddHours(1));
+            string endDate = ParseDateString(DateTime.Now.AddHours(2));
+
+            addPromo.EnterDescription(description);
+            addPromo.EnterPromoStartDate(startDate);
+            addPromo.EnterPromoEndDate(endDate);
+
+            addPromo.ReturnToPromoList();
+
+            Assert.False(promoList.PromoFoundInList(description));
         }
     }
 }

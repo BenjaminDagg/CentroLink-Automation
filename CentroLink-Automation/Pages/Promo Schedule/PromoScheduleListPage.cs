@@ -129,6 +129,27 @@ namespace CentroLink_Automation
         }
 
 
+        public bool PromoFoundInList(string promoDescription)
+        {
+            WindowsElement promoList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = promoList.FindElements(RowSelector);
+
+            foreach (var row in rows)
+            {
+
+                string description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
+
+                if (description == promoDescription)
+                {
+                    return true;
+                }
+
+            }
+
+            return false;
+        }
+
+
         public override void SelectRow(int rowNum)
         {
             WindowsElement list = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
