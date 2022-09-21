@@ -89,5 +89,43 @@ namespace CentroLink_Automation
 
             return null;
         }
+
+
+        public Bank GetBank(int bankId)
+        {
+            WindowsElement bankList = (WindowsElement)wait.Until(d => d.FindElement(DataGrid));
+            var rows = bankList.FindElements(RowSelector);
+
+            foreach (var row in rows)
+            {
+
+                int id = int.Parse(row.FindElement(By.XPath(".//Custom[1]/Text")).Text);
+
+                if (id == bankId)
+                {
+
+                    Bank bank = new Bank();
+                    bank.BankNumber = id;
+                    bank.Description = row.FindElement(By.XPath(".//Custom[2]/Text")).Text;
+                    bank.GameTypeCode = row.FindElement(By.XPath(".//Custom[3]/Text")).Text;
+
+                    string IsPaper = row.FindElement(By.XPath(".//Custom[4]/Text")).Text;
+                    bank.IsPaper = IsPaper == "Yes";
+                    
+                    bank.LockupAmount = double.Parse(row.FindElement(By.XPath(".//Custom[5]/Text")).Text, System.Globalization.NumberStyles.Currency);
+                    bank.DBALockupAmount = double.Parse(row.FindElement(By.XPath(".//Custom[6]/Text")).Text, System.Globalization.NumberStyles.Currency);
+
+                    bank.Product = row.FindElement(By.XPath(".//Custom[7]/Text")).Text;
+                    bank.ProductLine = row.FindElement(By.XPath(".//Custom[8]/Text")).Text;
+                    bank.PromoTicketFactor = int.Parse(row.FindElement(By.XPath(".//Custom[9]/Text")).Text);
+                    bank.PromoTicketAmount = double.Parse(row.FindElement(By.XPath(".//Custom[10]/Text")).Text, System.Globalization.NumberStyles.Currency);
+
+                    return bank;
+                }
+
+            }
+
+            return null;
+        }
     }
 }

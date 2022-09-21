@@ -39,7 +39,18 @@ namespace CentroLink_Automation
             loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
             navMenu.ClickBankSetupTab();
 
-            bankList.SelectRowByBankId(3000);
+            var bank = bankList.GetBank(777);
+
+            Console.WriteLine("Bank No: " + bank.BankNumber);
+            Console.WriteLine("Desc: " + bank.Description);
+            Console.WriteLine("GTC: " + bank.GameTypeCode);
+            Console.WriteLine("IsPaper: " + bank.IsPaper);
+            Console.WriteLine("Lockup AMount: " + bank.LockupAmount);
+            Console.WriteLine("DBA Lockup AMount: " + bank.DBALockupAmount);
+            Console.WriteLine("Product: " + bank.Product);
+            Console.WriteLine("Product Line: " + bank.ProductLine);
+            Console.WriteLine("Promo Ticket factor: " + bank.PromoTicketFactor);
+            Console.WriteLine("Promo ticket amount: " + bank.PromoTicketAmount);
         }
     }
 }
