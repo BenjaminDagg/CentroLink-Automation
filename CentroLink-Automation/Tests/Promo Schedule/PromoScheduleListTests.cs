@@ -177,5 +177,93 @@ namespace CentroLink_Automation
 
             Assert.True(driver.FindElement(promoList.DeletePromoButton).Enabled);
         }
+
+
+        [Test]
+        public void PromoList_TogglePromoButton_Text()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            promoList.TurnPromoTicketsOn();
+            Assert.AreEqual("Turn Promo Ticket Off",driver.FindElement(promoList.TogglePromoButton).Text);
+
+            promoList.TurnPromoTicketsOff();
+            Assert.AreEqual("Turn Promo Ticket On", driver.FindElement(promoList.TogglePromoButton).Text);
+        }
+
+
+        [Test]
+        public void PromoList_TogglePromo_Confirmation_Dialog()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            string expectedAlert = "Are you sure you want to turn the Promo Ticket Printing";
+
+            promoList.ClickPromoToggleButton();
+            string actualAlert = promoList.TogglePromoAlert.AlertText;
+
+            Assert.True(actualAlert.Contains(expectedAlert));
+        }
+
+
+        [Test]
+        public void PromoList_TogglePromo_Confirmation_Dialog_Cancel()
+        {
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            bool promoEnabledBefore = promoList.PromoTicketsAreEnabled;
+
+            promoList.ClickPromoToggleButton();
+            promoList.TogglePromoAlert.Cancel();
+
+            bool promoEnabledAfter = promoList.PromoTicketsAreEnabled;
+
+            Assert.AreEqual(promoEnabledAfter,promoEnabledBefore);
+        }
+
+
+        [Test]
+        public async Task PromoList_Started_Checkbox()
+        {
+            string startDateString = DateTime.Now.AddHours(-1).ToString("yyyy-MM-dd HH:00:00.000");
+            DateTime startDate = DateTime.ParseExact(startDateString, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            string endDateString = DateTime.Now.AddHours(2).ToString("yyyy-MM-dd HH:00:00.000");
+            DateTime endDate = DateTime.ParseExact(endDateString, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            await LotteryRetailDatabase.UpdatePromo(TestData.TestPromoEntryScheduleId, startDate, endDate, true, false);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            var promo = promoList.GetPromoSchedule(TestData.TestPromoEntryScheduleId);
+
+            Assert.True(promo.Started);
+            Assert.False(promo.Ended);
+        }
+
+
+        [Test]
+        public async Task PromoList_Ended_Checkbox()
+        {
+            string startDateString = DateTime.Now.AddHours(-2).ToString("yyyy-MM-dd HH:00:00.000");
+            DateTime startDate = DateTime.ParseExact(startDateString, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            string endDateString = DateTime.Now.AddHours(-1).ToString("yyyy-MM-dd HH:00:00.000");
+            DateTime endDate = DateTime.ParseExact(endDateString, "yyyy-MM-dd HH:00:00.000", CultureInfo.InvariantCulture);
+
+            await LotteryRetailDatabase.UpdatePromo(TestData.TestPromoEntryScheduleId, startDate, endDate, true, true);
+
+            loginPage.Login(TestData.AdminUsername, TestData.AdminPassword);
+            navMenu.ClickPromoTicketSetupTab();
+
+            var promo = promoList.GetPromoSchedule(TestData.TestPromoEntryScheduleId);
+
+            Assert.True(promo.Started);
+            Assert.True(promo.Ended);
+        }
     }
 }

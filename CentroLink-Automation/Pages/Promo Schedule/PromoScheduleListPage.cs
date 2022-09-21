@@ -49,6 +49,23 @@ namespace CentroLink_Automation
         }
 
 
+        public bool PromoTicketsAreEnabled
+        {
+            get
+            {
+                try
+                {
+                    WindowsElement toggleButton = driver.FindElement(By.Name("Turn Promo Ticket Off"));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+
         public void EnterDayFilter(int numDays)
         {
             string numDaysString = numDays.ToString();
@@ -255,6 +272,21 @@ namespace CentroLink_Automation
         public void RefreshList()
         {
             driver.FindElement(RefreshButton).Click();
+        }
+
+
+        public void ClickPromoToggleButton()
+        {
+            try
+            {
+                WindowsElement toggleButton = driver.FindElement(By.Name("Turn Promo Ticket Off"));
+                toggleButton.Click();
+            }
+            catch (Exception ex)
+            {
+                WindowsElement toggleButton = driver.FindElement(By.Name("Turn Promo Ticket On"));
+                toggleButton.Click();
+            }
         }
 
 
